@@ -1,115 +1,79 @@
 'use client'
 
-import Link from "next/link";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { useFormStatus } from "react-dom";
+import { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import loginAction from "@/actions/loginAction";
 import { Button } from "@/components/ui/button";
-import { useEffect, useActionState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-
-function SubmitButton() {
-  const { pending } = useFormStatus()
-
-  return (
-    <Button type="submit" disabled={pending}>
-      {pending ? "Signing In..." : "Sign In"}
-    </Button>
-  )
-}
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function LoginPage() {
-    const [state, formAction] = useActionState(loginAction, null)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-    useEffect(() => {
-        if (state?.success) {
-        // Redirect or update UI on successful login
-        console.log("Login successful!")
-        }
-    }, [state])
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
 
-    return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-                <div className="flex flex-col space-y-2 text-center">
-                    <h1 className="text-2xl font-semibold tracking-tight">
-                        Welcome back
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                        Enter your email to sign in to your account
-                    </p>
-                </div>
-                <div className={cn("grid gap-6")}>
-                    <form action={formAction}>
-                        <div className="grid gap-2">
-                        <div className="grid gap-1">
-                            <Label className="sr-only" htmlFor="email">
-                            Email
-                            </Label>
-                            <Input
-                            id="email"
-                            name="email"
-                            placeholder="name@example.com"
-                            type="email"
-                            autoCapitalize="none"
-                            autoComplete="email"
-                            autoCorrect="off"
-                            required
-                            />
-                        </div>
-                        <div className="grid gap-1">
-                            <Label className="sr-only" htmlFor="password">
-                            Password
-                            </Label>
-                            <Input
-                            id="password"
-                            name="password"
-                            placeholder="Password"
-                            type="password"
-                            autoCapitalize="none"
-                            autoComplete="current-password"
-                            autoCorrect="off"
-                            required
-                            />
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <Checkbox id="remember" name="remember" />
-                            <label
-                            htmlFor="remember"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                            Remember me
-                            </label>
-                        </div>
-                        <SubmitButton />
-                        </div>
-                    </form>
-                    {state?.message && (
-                        <p className={cn("text-sm text-center", state.success ? "text-green-600" : "text-red-600")}> {state.message} </p>
-                    )}
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground">
-                            Or continue with
-                        </span>
-                        </div>
-                    </div>
-                    <Button variant="outline" type="button">
-                        <Image src="/placeholder.svg?height=24&width=24" width={24} height={24} alt="Google" className="mr-2 h-4 w-4" /> Sign In With Google
-                    </Button>
-                </div>
-                <p className="px-8 text-center text-sm text-muted-foreground">
-                    <Link href="/forgot-password" className="hover:text-brand underline underline-offset-4">
-                        Forgot your password?
-                    </Link>
-                </p>
+    if (!email || !password) {
+      setError('Both fields are required');
+      return;
+    }
+
+    // Simulate login API call
+    console.log('Logging in user:', { email, password });
+
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Redirect to a dashboard or success page
+    router.push('/dashboard');
+  };
+
+  return (
+    <div className="flex items-center justify-center">
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Sign in to your account to continue.</CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="john@example.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-        </div>
-    )
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                placeholder="Your password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            {error && (
+              <div className="flex items-center text-red-600">
+                <AlertCircle className="w-4 h-4 mr-2" />
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" className="w-full">Login</Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
+  );
 }
