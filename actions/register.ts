@@ -10,12 +10,14 @@ export default async function registerAction(email: string, password: string, na
         await setDoc(doc(db, 'users', userCredential.user.uid), {
             name: name,
             email: email,
-            usertype: 'admin',
+            role: 'customer',
             timestamp: serverTimestamp()
         });
+        console.log('User registered:', userCredential.user.uid);
 
-        return { success: true, message: "User registered successfully", user: userCredential.user };
+        return { success: true, message: "User registered successfully" };
     } catch (error) {
-        return { success: false, message: error || "Registration failed" };
+        console.error('Error registering user:', error);
+        return { success: false, message: "Registration failed" };
     }
 }

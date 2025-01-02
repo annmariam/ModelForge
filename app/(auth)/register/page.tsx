@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import registerAction from "@/actions/register";
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
@@ -18,7 +19,6 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
 
     if (!name || !email || !password || !confirmPassword) {
       setError('All fields are required. Please fill in all fields.')
@@ -26,18 +26,34 @@ export default function RegisterPage() {
     }
     
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setError('Passwords do not match. Re-enter your password and confirm password.')
       return
     }
+    
+    // Call the register action
+    try {
+      const response = await registerAction(email, password, name);
+      if (response.success) {
+        setMessage(response.message);
+      } else {
+        setError(response.message);
+      }
+    } catch (error) {
+      console.log(error)
+      setError('An error occurred during registration. Please try again.');
+    }
 
-    console.log('Registering user:', { name, email, password })
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setMessage('Account created successfully. Redirecting to login page...')
-
+    // Clear form fields
+    setName('')
+    setEmail('')
+    setPassword('')
+    setConfirmPassword('')
+    
+    // Clear register status after 10 seconds
     setTimeout(() => {
       setError('')
       setMessage('')
-    }, 5000)    
+    }, 10000)    
   }
 
   return (
@@ -62,8 +78,8 @@ export default function RegisterPage() {
               <Input id="password" type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} minLength={8} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Confirm Password</Label>
-              <Input id="password" type="password" placeholder="********" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={8} />
+              <Label htmlFor="confirmpassword">Confirm Password</Label>
+              <Input id="confirmpassword" type="password" placeholder="********" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={8} />
             </div>
             {error && (
               <div className="flex items-center text-red-600">
