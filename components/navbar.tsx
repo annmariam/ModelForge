@@ -51,7 +51,7 @@ export function Navbar() {
                             <ModeToggle />
                             {user ? (
                                 <Avatar>
-                                    {/* <AvatarImage src={userData.photoURL || ""} alt={userData.name} /> */}
+                                    <AvatarImage src={userData.photoURL || ""} alt={userData.name} />
                                     <AvatarFallback>{userData.name}</AvatarFallback>
                                 </Avatar>
                             ) : (
@@ -86,7 +86,7 @@ export function Navbar() {
                     {user && (
                         <div className="md:hidden">
                             <Avatar>
-                                {/* <AvatarImage src={userData.photoURL || ""} alt={userData.name} /> */}
+                                <AvatarImage src={userData.photoURL || ""} alt={userData.name} />
                                 <AvatarFallback>{userData.name}</AvatarFallback>
                             </Avatar>
                         </div>

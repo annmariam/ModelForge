@@ -14,23 +14,26 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 export default function LoginPage() {
   const router = useRouter();
   const { signInGoogle, signInEmail } = useAuth();
-  const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [message, setMessage] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      setError('Both fields are required. Please fill in all fields.');
+      setError(true);
+      setErrorMessage('Both fields are required. Please fill in all fields.');
       return;
     }
 
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address.');
+      setError(true);
+      setErrorMessage('Please enter a valid email address.');
       return;
     }
 
@@ -41,7 +44,15 @@ export default function LoginPage() {
         router.push('/dashboard');
       }, 1000);
     } catch (error) {
-      setError(error.message);
+      console.log(error)
+      setError(true);
+      setErrorMessage(error.message);
+    } finally {
+      setTimeout(() => {
+        setMessage('');
+        setError(false);
+        setErrorMessage('');
+      }, 3000);
     }
   };
 
@@ -53,7 +64,14 @@ export default function LoginPage() {
         router.push('/dashboard');
       }, 1000);
     } catch (error) {
-      setError(error.message);
+      setError(true);
+      setErrorMessage(error.message);
+    } finally {
+      setTimeout(() => {
+        setMessage('');
+        setError(false);
+        setErrorMessage('');
+      }, 3000);
     }
   };
 
@@ -77,7 +95,7 @@ export default function LoginPage() {
             {error && (
               <div className="flex items-center text-red-600" aria-live="polite">
                 <AlertCircle className="w-5 h-5 mr-2" />
-                <span className="text-sm">{error}</span>
+                <span className="text-sm">{errorMessage}</span>
               </div>
             )}
             {message && (
