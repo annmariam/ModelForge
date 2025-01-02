@@ -1,28 +1,18 @@
 "use client";
 
-import { auth } from '@/config/firebase';
-import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { useAuth } from "@/config/AuthProvider";
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
-    const router = useRouter();
-    const [user, setUser] = useState<User | null>(null);
+    const { user, userData, logOut } = useAuth();
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-            setUser(authUser);
-        });
-
-        if (!user) {
-            router.push("/login");
-        }
-
-        return () => unsubscribe(); // Cleanup subscription
-    }, [router, user]);
+    console.log(user, userData);
 
     return ( 
         <div>
+            <header>
+                <h1>Welcome, {user?.name}</h1>
+                <button onClick={logOut}>Log Out</button>
+            </header>
             {children}
         </div>
     );

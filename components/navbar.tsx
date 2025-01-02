@@ -3,12 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
-import { auth } from "@/config/firebase";
 import Logo from "@/public/ModelForge.png";
-import fetchData from "@/actions/fetchData";
 import { Button } from "@/components/ui/button";
-import React, { useState, useEffect } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { useAuth } from "@/config/AuthProvider";
+import React, { useState } from "react";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,34 +24,8 @@ const nav_right = [
 ];
 
 export function Navbar() {
+    const { user, userData } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
-    const [name, setName] = useState<string>("");
-    const [image, setImage] = useState<string>("");
-    const [user, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-            setUser(authUser);
-        });
-
-        return () => unsubscribe(); // Cleanup subscription
-    }, []);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (user?.uid) {
-                try {
-                    const userData = await fetchData(user.uid);
-                    setName(userData.userName);
-                    setImage(userData.photoURL);
-                } catch (error) {
-                    console.error("Failed to fetch user data:", error);
-                }
-            }
-        };
-
-        fetchUserData();
-    }, [user?.uid]);
 
     return (
         <nav className="sticky top-0 z-50 border-b bg-background">
@@ -79,8 +51,8 @@ export function Navbar() {
                             <ModeToggle />
                             {user ? (
                                 <Avatar>
-                                    <AvatarImage src={image} alt={name} />
-                                    <AvatarFallback>{name || "?"}</AvatarFallback>
+                                    {/* <AvatarImage src={userData.photoURL || ""} alt={userData.name} /> */}
+                                    <AvatarFallback>{userData.name}</AvatarFallback>
                                 </Avatar>
                             ) : (
                                 nav_right.map((item) => (
@@ -114,8 +86,8 @@ export function Navbar() {
                     {user && (
                         <div className="md:hidden">
                             <Avatar>
-                                <AvatarImage src={image} alt={name} />
-                                <AvatarFallback>{name || "?"}</AvatarFallback>
+                                {/* <AvatarImage src={userData.photoURL || ""} alt={userData.name} /> */}
+                                <AvatarFallback>{userData.name}</AvatarFallback>
                             </Avatar>
                         </div>
                     )}

@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "ModelForge is a comprehensive 3D printing service platform offering seamless user experiences for customers, designers, and printers. Empowering creativity with features like user-friendly dashboards, geolocation-based printing, customizable 3D model uploads, and a unique rewards system for loyal users and sellers. Whether you're uploading, selling, or printing, ModelForge connects innovation and precision with state-of-the-art technology.",
 };
 
+import { AuthProvider } from "@/config/AuthProvider";
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -26,14 +28,16 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                    <Navbar />
-                    <main style={{ minHeight: "calc(100vh - 82px)" }} className="flex justify-center items-center">
-                        {children}
-                    </main>
-                </ThemeProvider>
-            </body>
+            <AuthProvider>
+                <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                        <Navbar />
+                        <main style={{ minHeight: "calc(100vh - 82px)" }} className="flex justify-center items-center">
+                            {children}
+                        </main>
+                    </ThemeProvider>
+                </body>
+            </AuthProvider>
         </html>
     );
 }

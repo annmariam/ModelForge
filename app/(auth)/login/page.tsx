@@ -2,16 +2,18 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import loginAction from '@/actions/login';
+import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/config/AuthProvider";
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { signInGoogle, signInEmail } = useAuth();
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -33,18 +35,25 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await loginAction(email, password);
-      if (response.success) {
-        setMessage(response.message);
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1000);
-      } else {
-        setError(response.message);
-      }
-    } catch (err) {
-      console.error(err);
-      setError('An error occurred during login. Please try again.');
+      await signInEmail(email, password);
+      setMessage('You have successfully logged in.');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInGoogle();
+      setMessage('You have successfully logged in with Google.');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -81,6 +90,9 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col space-y-2">
             <Button type="submit" className="w-full" disabled={!email || !password}>
               Login
+            </Button>
+            <Button type="button" className="w-full" variant="outline" onClick={handleGoogleSignIn}>
+              <FcGoogle /> Sign in with Google
             </Button>
             <div className="flex justify-between">
               <Button variant="link" className="text-sm">Forgot password?</Button>
