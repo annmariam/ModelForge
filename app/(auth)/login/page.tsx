@@ -15,25 +15,22 @@ export default function LoginPage() {
   const router = useRouter();
   const { signInGoogle, signInEmail } = useAuth();
   const [email, setEmail] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const [message, setMessage] = useState<string>('');
-  const [error, setError] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      setError(true);
-      setErrorMessage('Both fields are required. Please fill in all fields.');
+      setError('Both fields are required. Please fill in all fields.');
       return;
     }
 
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError(true);
-      setErrorMessage('Please enter a valid email address.');
+      setError('Please enter a valid email address.');
       return;
     }
 
@@ -45,13 +42,11 @@ export default function LoginPage() {
       }, 1000);
     } catch (error) {
       console.log(error)
-      setError(true);
-      setErrorMessage(error.message);
+      setError("An error occurred while signing in. Please try again.");
     } finally {
       setTimeout(() => {
         setMessage('');
-        setError(false);
-        setErrorMessage('');
+        setError('');
       }, 3000);
     }
   };
@@ -64,13 +59,12 @@ export default function LoginPage() {
         router.push('/dashboard');
       }, 1000);
     } catch (error) {
-      setError(true);
-      setErrorMessage(error.message);
+      console.log(error)
+      setError("An error occurred while signing in with Google. Please try again.");
     } finally {
       setTimeout(() => {
         setMessage('');
-        setError(false);
-        setErrorMessage('');
+        setError('');
       }, 3000);
     }
   };
@@ -95,7 +89,7 @@ export default function LoginPage() {
             {error && (
               <div className="flex items-center text-red-600" aria-live="polite">
                 <AlertCircle className="w-5 h-5 mr-2" />
-                <span className="text-sm">{errorMessage}</span>
+                <span className="text-sm">{error}</span>
               </div>
             )}
             {message && (
