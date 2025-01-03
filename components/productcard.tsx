@@ -1,6 +1,6 @@
 "use client";
 
-// import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 
 interface ProductCardProps {
@@ -11,13 +11,10 @@ interface ProductCardProps {
     link: string;
 }
 
-// export default function ProductCard({ productName, productPrice, productImage, id, link }: ProductCardProps) {
-    export default function ProductCard({ productName, productPrice, productImage }: ProductCardProps) {
-    const price = productPrice;
-
+export default function ProductCard({ productName, productPrice, productImage, id, link }: ProductCardProps) {
     return (
         <div className="w-full h-full border border-gray-200 shadow-lg rounded-lg bg-white hover:shadow-xl transition-shadow duration-300">
-            {/* <Link href={`${link}${id}`} className="h-full flex flex-col"> */}
+            <Link href={`${link}/${id}`} className="h-full flex flex-col">
                 <div className="w-full flex justify-center p-4">
                     <Image src={productImage} alt={productName} width={1000} height={1000} className="w-[238px] aspect-square object-contain rounded-md" />
                 </div>
@@ -27,10 +24,10 @@ interface ProductCardProps {
                         {productName}
                     </div>
                     <div className="text-center text-lg font-medium text-gray-600">
-                        <p>&#8377;{price}/Qty</p>
+                        <p>&#8377;{productPrice}/Qty</p>
                     </div>
                 </div>
-            {/* </Link> */}
+            </Link>
         </div>
     );
 }
