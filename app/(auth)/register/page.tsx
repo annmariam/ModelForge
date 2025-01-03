@@ -57,8 +57,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <Card className="w-[350px]">
+    <div className="container mx-auto px-4 py-8">
+      <Card className="max-w-md mx-auto">
         <CardHeader className='text-center'>
           <CardTitle>Register</CardTitle>
           <CardDescription>Create a new account to get started.</CardDescription>

@@ -1,5 +1,6 @@
 'use client';
 
+import addUser from "@/actions/addUser";
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/config/firebase';
 import { getDoc, doc } from 'firebase/firestore';
@@ -38,9 +39,23 @@ export function AuthProvider({ children }) {
         return () => unsubscribe();
     }, []);
 
-    const signInGoogle = () => {
+    const signInGoogle = async () => {
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider);
+
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            if (user) {
+                await addUser(user);
+                fetchUserData(user);
+                router.push('/dashboard'); // Navigate to the desired page
+            } else {
+                console.log('No user found after sign-in');
+            }
+        } catch (e) {
+            console.log('Error signing in with Google:', e.message);
+        }
     };
 
     const signInEmail = (email, password) => {

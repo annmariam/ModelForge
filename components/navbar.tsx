@@ -4,15 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import Logo from "@/public/ModelForge.png";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/config/AuthProvider";
 import React, { useState } from "react";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
 const nav_left = [
-    { name: "Home", href: "/" },
     { name: "3D Model", href: "/3d-model" },
     { name: "Community", href: "/community" },
     { name: "Contact", href: "/contact" },
@@ -24,7 +25,8 @@ const nav_right = [
 ];
 
 export function Navbar() {
-    const { user, data } = useAuth();
+    const router = useRouter();
+    const { user, data, logOut } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -50,13 +52,23 @@ export function Navbar() {
                         <div className="flex items-center justify-center gap-2">
                             <ModeToggle />
                             {user ? (
-                                <Avatar className="bg-gray-200 text-black">
-                                    {data?.photoURL ? (
-                                        <AvatarImage src={data.photoURL} alt={data?.name || "User"} />
-                                    ) : (
-                                        <AvatarFallback>{data?.name || "?"}</AvatarFallback>
-                                    )}
-                                </Avatar>    
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Avatar>
+                                            {data?.photoURL ? (
+                                                <AvatarImage src={data.photoURL} alt={data?.name || "User"} />
+                                            ) : (
+                                                <AvatarFallback>{data?.name?.[0] || "?"}</AvatarFallback>
+                                            )}
+                                        </Avatar>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-48 bg-background">
+                                        <DropdownMenuItem onClick={() => router.push("/dashboard")}> Dashboard </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push("/dashboard/orders")}> Orders </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={() => { logOut(); }}> Logout </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>   
                             ) : (
                                 nav_right.map((item) => (
                                     <Link key={item.name} href={item.href} className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300"> {item.name} </Link>
@@ -65,7 +77,7 @@ export function Navbar() {
                         </div>
                     </div>
                     {/* Mobile Section */}
-                    <div className="md:hidden">
+                    <div className="md:hidden flex items-center justify-center">
                         <Sheet open={isOpen} onOpenChange={setIsOpen}>
                             <SheetTrigger asChild>
                                 <Button variant="ghost" size="icon" aria-label={isOpen ? "Close Menu" : "Open Menu"}>
@@ -85,18 +97,26 @@ export function Navbar() {
                                 </nav>
                             </SheetContent>
                         </Sheet>
+                        {user && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Avatar className="bg-gray-500 text-black dark:text-white">
+                                        {data?.photoURL ? (
+                                            <AvatarImage src={data.photoURL} alt={data?.name || "User"} />
+                                        ) : (
+                                            <AvatarFallback>{data?.name?.[0] || "?"}</AvatarFallback>
+                                        )}
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48 bg-background">
+                                    <DropdownMenuItem onClick={() => router.push("/dashboard")}> Dashboard </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push("/dashboard/orders")}> Orders </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => { logOut(); }}> Logout </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
                     </div>
-                    {user && (
-                        <div className="md:hidden">
-                            <Avatar className="bg-gray-200 text-black">
-                                {data?.photoURL ? (
-                                    <AvatarImage src={data.photoURL} alt={data?.name || "User"} />
-                                ) : (
-                                    <AvatarFallback>{data?.name || "?"}</AvatarFallback>
-                                )}
-                            </Avatar>
-                        </div>
-                    )}
                 </div>
             </div>
         </nav>
