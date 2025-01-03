@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/button";
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
     const { data, logOut } = useAuth();
-    const [role, setRole] = useState("");
+    type Role = "admin" | "customer" | "printer";
+    const [role, setRole] = useState<Role>("admin");
 
     // Update role when data changes
     useEffect(() => {
@@ -60,7 +61,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
                     <div className="flex flex-col h-[calc(100vh-180px)] justify-between">
                         <nav>
                             {navItems[role]?.map((item) => (
-                                <Link key={item.name} href={item.href} className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${router.pathname === item.href ? "bg-gray-200 dark:bg-gray-700" : "text-red-400" }`}> {item.name} </Link>
+                                <Link key={item.name} href={item.href} className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${router.asPath === item.href ? "bg-gray-200 dark:bg-gray-700" : "text-red-400" }`}> {item.name} </Link>
                             ))}
                         </nav>
                         <Button variant={"link"} onClick={logOut} className="flex items-center justify-center w-full p-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700">
