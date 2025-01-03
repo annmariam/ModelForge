@@ -24,7 +24,7 @@ const nav_right = [
 ];
 
 export function Navbar() {
-    const { user, userData } = useAuth();
+    const { user, data } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -47,13 +47,16 @@ export function Navbar() {
                     </div>
                     {/* Right Section */}
                     <div className="hidden md:block">
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center gap-2">
                             <ModeToggle />
                             {user ? (
-                                <Avatar>
-                                    <AvatarImage src={userData.photoURL || ""} alt={userData.name} />
-                                    <AvatarFallback>{userData.name}</AvatarFallback>
-                                </Avatar>
+                                <Avatar className="bg-gray-200 text-black">
+                                    {data?.photoURL ? (
+                                        <AvatarImage src={data.photoURL} alt={data?.name || "User"} />
+                                    ) : (
+                                        <AvatarFallback>{data?.name || "?"}</AvatarFallback>
+                                    )}
+                                </Avatar>    
                             ) : (
                                 nav_right.map((item) => (
                                     <Link key={item.name} href={item.href} className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300"> {item.name} </Link>
@@ -85,9 +88,12 @@ export function Navbar() {
                     </div>
                     {user && (
                         <div className="md:hidden">
-                            <Avatar>
-                                <AvatarImage src={userData.photoURL || ""} alt={userData.name} />
-                                <AvatarFallback>{userData.name}</AvatarFallback>
+                            <Avatar className="bg-gray-200 text-black">
+                                {data?.photoURL ? (
+                                    <AvatarImage src={data.photoURL} alt={data?.name || "User"} />
+                                ) : (
+                                    <AvatarFallback>{data?.name || "?"}</AvatarFallback>
+                                )}
                             </Avatar>
                         </div>
                     )}
