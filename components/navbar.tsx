@@ -10,6 +10,10 @@ import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
+const nav_left = [
+    { name: "3D Models", href: "/3d-models" },
+]
+
 const nav_right = [
     { name: "Login", href: "/login" },
     { name: "Register", href: "/register" },
@@ -29,6 +33,11 @@ export function Navbar() {
                             <Image src={Logo} alt="ModelForge" width={50} height={50} />
                             <span className="text-2xl font-bold text-primary"> ModelForge </span>
                         </Link>
+                        <div className="hidden md:block">
+                            {nav_left.map((item) => (
+                                <Link key={item.name} href={item.href} className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300"> {item.name} </Link>
+                            ))}
+                        </div>
                     </div>
                     {/* Right Section */}
                     <div className="hidden md:block">

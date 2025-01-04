@@ -1,191 +1,80 @@
-"use client";
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Loader } from "lucide-react";
-import { useEffect, useState } from "react";
-import ProductCard from "@/components/productcard";
+const categories = [
+    { name: 'Characters', icon: '🧑' },
+    { name: 'Environments', icon: '🏞️' },
+    { name: 'Vehicles', icon: '🚗' },
+    { name: 'Props', icon: '🪑' },
+    { name: 'Architecture', icon: '🏛️' },
+    { name: 'Animals', icon: '🐘' },
+]
 
-interface Product {
-    id: string;
-    productname: string;
-    productprice: number;
-    productimage: string;
-    category: string; // New category field
-}
+const popularModels = [
+    { id: 1, name: 'Sci-Fi Spaceship', category: 'Vehicles', price: 49.99 },
+    { id: 2, name: 'Fantasy Castle', category: 'Architecture', price: 79.99 },
+    { id: 3, name: 'Cyberpunk Character', category: 'Characters', price: 39.99 },
+    { id: 4, name: 'Tropical Island', category: 'Environments', price: 59.99 },
+    { id: 5, name: 'Futuristic Weapon', category: 'Props', price: 29.99 },
+    { id: 6, name: 'Ancient Dragon', category: 'Animals', price: 89.99 },
+]
 
 export default function Home() {
-    const [loading, setLoading] = useState(true);
-    const [products, setProducts] = useState<Product[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [priceRange, setPriceRange] = useState<[number, number]>([0, Infinity]);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-
-    useEffect(() => {
-        // Simulate a delay for fetching data
-        setTimeout(() => {
-            const mockData: Product[] = [
-                {
-                    id: "1",
-                    productname: "Smartphone",
-                    productprice: 699,
-                    productimage: "https://via.placeholder.com/150",
-                    category: "Electronics",
-                },
-                {
-                    id: "2",
-                    productname: "Laptop",
-                    productprice: 1199,
-                    productimage: "https://via.placeholder.com/150",
-                    category: "Electronics",
-                },
-                {
-                    id: "3",
-                    productname: "Headphones",
-                    productprice: 199,
-                    productimage: "https://via.placeholder.com/150",
-                    category: "Accessories",
-                },
-                {
-                    id: "4",
-                    productname: "Smartwatch",
-                    productprice: 249,
-                    productimage: "https://via.placeholder.com/150",
-                    category: "Accessories",
-                },
-                {
-                    id: "5",
-                    productname: "Camera",
-                    productprice: 999,
-                    productimage: "https://via.placeholder.com/150",
-                    category: "Photography",
-                },
-            ];
-            setProducts(mockData);
-            setFilteredProducts(mockData);
-            setLoading(false);
-        }, 2000); // 2 seconds delay
-    }, []);
-
-    // Filter logic
-    useEffect(() => {
-        const lowerPrice = priceRange[0];
-        const upperPrice = priceRange[1];
-
-        const filtered = products.filter((product) => {
-            const matchesSearch = product.productname
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase());
-            const matchesPrice =
-                product.productprice >= lowerPrice &&
-                product.productprice <= upperPrice;
-            const matchesCategory =
-                selectedCategories.length === 0 ||
-                selectedCategories.includes(product.category);
-            return matchesSearch && matchesPrice && matchesCategory;
-        });
-
-        setFilteredProducts(filtered);
-    }, [searchQuery, priceRange, selectedCategories, products]);
-
-    const toggleCategory = (category: string) => {
-        setSelectedCategories((prev) =>
-            prev.includes(category)
-                ? prev.filter((cat) => cat !== category)
-                : [...prev, category]
-        );
-    };
-
-    if (loading)
-        return (
-            <div className="spinner flex justify-center items-center" style={{ height: "calc(100vh - 150px)" }}>
-                <Loader size={32} className="animate-spin" />
-            </div>
-        );
-
-    // Get unique categories for the filter
-    const categories = Array.from(new Set(products.map((product) => product.category)));
-
     return (
-        <div className="flex">
-            {/* Sidebar Filter */}
-            <div className="w-[200px] border-r">
-                <h2 className="font-semibold text-lg mb-4">Filters</h2>
-                {/* Category Filter */}
-                <div className="mb-5">
-                    <h3 className="font-medium mb-2">Categories</h3>
-                    <ul className="space-y-2">
-                        {categories.map((category) => (
-                            <li key={category}>
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedCategories.includes(category)}
-                                        onChange={() => toggleCategory(category)}
-                                        className="form-checkbox"
-                                    />
-                                    {category}
-                                </label>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="w-full pl-4 container mx-auto">
-                {/* Search and Price Filter */}
-                <div className="flex flex-wrap justify-between items-center mb-5 gap-3">
-                    <input
-                        type="text"
-                        placeholder="Search products..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="border border-gray-300 rounded-md px-3 py-2 w-full max-w-sm"
-                    />
-                    <div className="flex gap-2 items-center">
-                        <label className="text-sm font-medium">Price Range:</label>
-                        <input
-                            type="number"
-                            placeholder="Min"
-                            value={priceRange[0]}
-                            onChange={(e) =>
-                                setPriceRange([Number(e.target.value), priceRange[1]])
-                            }
-                            className="border border-gray-300 rounded-md px-2 py-1 w-20"
-                        />
-                        <span className="mx-1">-</span>
-                        <input
-                            type="number"
-                            placeholder="Max"
-                            value={priceRange[1] === Infinity ? "" : priceRange[1]}
-                            onChange={(e) =>
-                                setPriceRange([priceRange[0], Number(e.target.value) || Infinity])
-                            }
-                            className="border border-gray-300 rounded-md px-2 py-1 w-20"
-                        />
+        <div className="h-full">
+            <main>
+                {/* Hero Section */}
+                <section className="bg-blue-600 py-20">
+                    <div className="container mx-auto px-4 text-center">
+                        <h1 className="text-4xl md:text-6xl font-bold mb-4">Discover Amazing 3D Models</h1>
+                        <p className="text-xl mb-8">High-quality 3D assets for your projects</p>
+                        <Button size="lg" variant="secondary">Explore Models</Button>
                     </div>
-                </div>
+                </section>
 
-                {/* Product List */}
-                <div className="flex flex-wrap justify-center gap-5">
-                    {filteredProducts.map((product) => (
-                        <div key={product.id}>
-                            <ProductCard
-                                link="/product/"
-                                id={product.id}
-                                productName={product.productname}
-                                productPrice={product.productprice}
-                                productImage={product.productimage}
-                            />
+                {/* Categories Section */}
+                <section className="py-16">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl font-bold mb-8 text-center">Browse Categories</h2>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                            {categories.map((category) => (
+                                <Link key={category.name} href={`/category/${category.name.toLowerCase()}`} className="bg-gray-400 rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-shadow">
+                                    <div className="text-4xl mb-2">{category.icon}</div>
+                                    <h3 className="font-semibold">{category.name}</h3>
+                                </Link>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                </section>
 
-                {/* No Products Found */}
-                {filteredProducts.length === 0 && (
-                    <div className="text-center mt-10 text-gray-500">No products found.</div>
-                )}
-            </div>
+                {/* Popular Models Section */}
+                <section className="py-16">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl font-bold mb-8 text-center">Popular Models</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {popularModels.map((model) => (
+                                <Card key={model.id}>
+                                    <CardHeader>
+                                        <CardTitle>{model.name}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="aspect-square relative mb-4">
+                                            <Image src={`/placeholder.svg?height=300&width=300&text=${encodeURIComponent(model.name)}`} alt={model.name} layout="fill" objectFit="cover" className="rounded-md" />
+                                        </div>
+                                        <p className="text-sm text-gray-500">{model.category}</p>
+                                    </CardContent>
+                                    <CardFooter className="flex justify-between items-center">
+                                        <span className="text-lg font-bold">${model.price}</span>
+                                        <Button>Add to Cart</Button>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
-    );
+    )
 }

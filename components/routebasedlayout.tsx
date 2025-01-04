@@ -8,7 +8,7 @@ export const RouteBasedLayout = ({ children }: Readonly<{ children: React.ReactN
 
     return (
         <div>
-            <main style={{ minHeight: "calc(100vh - 82px)" }} className={isDashboard ? "" : "mx-auto p-4 sm:p-6 lg:p-8"}>
+            <main style={{ minHeight: "calc(100vh - 82px)" }} className={isDashboard ? "" : "mx-auto"}>
                 {children}
             </main>
         </div>
