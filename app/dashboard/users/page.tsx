@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import fetchUsers from "@/actions/fetchUsers";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -139,6 +140,7 @@ export default function Users() {
                         <SelectItem value="printer">Printer</SelectItem>
                     </SelectContent>
                 </Select>
+                <Link href="/dashboard/users/add" className="btn btn-primary">Add User</Link>
             </div>
 
             <Table>
