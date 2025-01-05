@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,11 +13,18 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 
 export default function LoginPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const { signInGoogle, signInEmail } = useAuth();
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [router, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
