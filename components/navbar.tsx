@@ -30,8 +30,8 @@ export function Navbar() {
                     {/* Left Section */}
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center px-3 py-2">
-                            <Image src={Logo} alt="ModelForge" width={50} height={50} />
-                            <span className="text-2xl font-bold text-primary"> ModelForge </span>
+                            <Image src={Logo} alt="ModelForge" width={50} height={50} priority />
+                            <span className="text-2xl font-bold text-primary pl-2"> ModelForge </span>
                         </Link>
                         <div className="hidden md:block">
                             {nav_left.map((item) => (
