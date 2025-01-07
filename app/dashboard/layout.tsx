@@ -5,19 +5,17 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/config/AuthProvider";
-import { FaCartShopping } from "react-icons/fa6";
 import { usePathname, useRouter } from "next/navigation";
-import { Loader, LogOut, ChevronLeft, ChevronRight, UserRoundPen } from "lucide-react";
-import { FaTachometerAlt, FaUsers, FaCogs, FaBoxOpen, FaCheckCircle, FaUpload } from "react-icons/fa";
+import { BadgeCheck, ChevronLeft, ChevronRight, FileUp, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundPen, ShoppingBasket, Settings } from "lucide-react";
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
     const pathName = usePathname();
     const { data, logOut, user } = useAuth();
-    type Role = "admin" | "customer" | "designer" | "printer";
     const [loading, setLoading] = useState(true);
     const [role, setRole] = useState<Role>("admin");
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    type Role = "admin" | "customer" | "designer" | "printer";
 
     useEffect(() => {
         if (user) {
@@ -32,31 +30,32 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
 
     const navItems = {
         admin: [
-            { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
-            { name: "Assign Orders", href: "/dashboard/assign", icon: FaCartShopping },
-            { name: "Users", href: "/dashboard/users", icon: FaUsers },
-            { name: "Settings", href: "/dashboard/settings", icon: FaCogs },
+            { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+            { name: "Assign Designs", href: "/dashboard/assign-designs", icon: PackagePlus },
+            { name: "Assign Orders", href: "/dashboard/assign-orders", icon: ShoppingBasket },
+            { name: "Users", href: "/dashboard/users", icon: Users },
+            { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
         customer: [
-            { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
-            { name: "Models", href: "/dashboard/models", icon: FaBoxOpen },
-            { name: "My Orders", href: "/dashboard/orders", icon: FaCheckCircle },
-            { name: "Settings", href: "/dashboard/settings", icon: FaCogs },
+            { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+            { name: "Models", href: "/dashboard/models", icon: PackageOpen },
+            { name: "My Orders", href: "/dashboard/orders", icon: BadgeCheck },
+            { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
         designer: [
-            { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
-            { name: "Designs", href: "/dashboard/designs", icon: FaBoxOpen },
-            { name: "Submit Design", href: "/dashboard/designs/submit", icon: FaUpload },
-            { name: "Settings", href: "/dashboard/settings", icon: FaCogs },
+            { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+            { name: "Designs", href: "/dashboard/designs", icon: PackageOpen },
+            { name: "Submit Design", href: "/dashboard/designs/submit", icon: FileUp },
+            { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
         printer: [
-            { name: "Dashboard", href: "/dashboard", icon: FaTachometerAlt },
-            { name: "Assigned Order", href: "/dashboard/printer", icon: FaBoxOpen },
-            { name: "Completed Orders", href: "/dashboard/printer/completed", icon: FaCheckCircle },
-            { name: "Printer Status", href: "/dashboard/printer/status", icon: FaBoxOpen },
-            { name: "Designs", href: "/dashboard/designs", icon: FaBoxOpen },
-            { name: "Submit Design", href: "/dashboard/designs/submit", icon: FaUpload },
-            { name: "Settings", href: "/dashboard/settings", icon: FaCogs },
+            { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+            { name: "Assigned Order", href: "/dashboard/printer", icon: PackageOpen },
+            { name: "Completed Orders", href: "/dashboard/printer/completed", icon: BadgeCheck },
+            { name: "Printer Status", href: "/dashboard/printer/status", icon: PackageOpen },
+            { name: "Designs", href: "/dashboard/designs", icon: PackageOpen },
+            { name: "Submit Design", href: "/dashboard/designs/submit", icon: FileUp },
+            { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
     };
 
@@ -98,20 +97,18 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
                 </div>
                 <nav className="flex-grow">
                     {navItems[role]?.map((item) => (
-                        <Link key={item.name} href={item.href} className={`flex items-center px-4 py-2 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${pathName === item.href ? "bg-gray-200 dark:bg-gray-700" : ""}`}>
+                        <Link key={item.name} href={item.href} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} px-4 py-2 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${pathName === item.href ? "bg-gray-200 dark:bg-gray-700" : ""}`}>
                             <item.icon size={24} className={`${pathName === item.href ? "text-red-600 dark:text-red-400" : ""}`} />
                             <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}> {item.name} </span>
                         </Link>
                     ))}
                 </nav>
-                <div className={`flex flex-col ${sidebarOpen ? "items-start" : "items-center"}`}>
-                    <Link href="/dashboard/profile">
-                        <div className={`flex items-center px-4 py-2 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${pathName === "/dashboard/profile" ? "bg-gray-200 dark:bg-gray-700" : "" }`}>
-                            <UserRoundPen size={24} className={`${pathName === "/dashboard/profile" ? "text-red-600 dark:text-red-400" : ""}`} />
-                            <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Profile</span>
-                        </div>
-                    </Link>
-                    <button onClick={logOut} className={`flex ${sidebarOpen ? "items-start" : "items-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
+                <div className={`flex flex-col w-full ${sidebarOpen ? "items-start" : "items-center"}`}>
+                    <button onClick={() => router.push("/dashboard/profile")} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
+                        <UserRoundPen size={24} className={`${pathName === "/dashboard/profile" ? "text-red-600 dark:text-red-400" : ""}`} />
+                        <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Profile</span>
+                    </button>
+                    <button onClick={logOut} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
                         <LogOut size={24} />
                         <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Log Out</span>
                     </button>
@@ -120,7 +117,13 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">
-                <div className="mx-auto py-6 sm:px-6 lg:px-8">{children}</div>
+                <div className="mx-auto py-6 sm:px-6 lg:px-8">
+                    <div className='w-full flex justify-between items-center pb-5'>                        
+                        <span className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{navItems[role].find(link => link.href === pathName)?.name}</span>
+                        <Button variant={"destructive"} onClick={logOut}>Logout</Button>
+                    </div>
+                    <div>{children}</div>
+                </div>
             </main>
         </div>
     );

@@ -1,16 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import fetchUsers from "@/actions/fetchUsers";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader, Pencil, Trash2 } from "lucide-react";
+import { AddUserDialog } from "@/components/AddUserData";
 import { EditUserData } from "@/components/EditUserData";
 import React, { useState, useEffect, useCallback } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface UserCollection {
     userID: string;
@@ -21,23 +21,26 @@ interface UserCollection {
 }
 
 export default function Users() {
-    const [error, setError] = useState<string | null>(null);
+    const [filter, setFilter] = useState<string>("all");
     const [loading, setLoading] = useState<boolean>(true);
+    const [adduser, setAdduser] = useState<boolean>(false);
+    const [edituser, setEdituser] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [userData, setUserData] = useState<UserCollection[]>([]);
     const [filteredData, setFilteredData] = useState<UserCollection[]>([]);
     const [editingUser, setEditingUser] = useState<UserCollection | null>(null);
-    const [filter, setFilter] = useState<string>("all");
-    const [searchQuery, setSearchQuery] = useState<string>("");
 
     // Edit Data
     const handleEdit = (user: UserCollection) => {
-        console.log("edit");
+        console.log("Edit user with ID:", user.userID);
+        setEdituser(true);
         setEditingUser(user);
     };
 
     // Update Data
     const handleUpdate = (user: UserCollection) => {
-        console.log("Update user with ID:", user);
+        console.log("Update user with ID:", user.userID);
     };
 
     // Delete Data
@@ -140,7 +143,7 @@ export default function Users() {
                         <SelectItem value="printer">Printer</SelectItem>
                     </SelectContent>
                 </Select>
-                <Link href="/dashboard/users/add" className="btn btn-primary">Add User</Link>
+                <Button variant={"default"} onClick={() => setAdduser(true)}>Add User</Button>
             </div>
 
             <Table>
@@ -187,8 +190,12 @@ export default function Users() {
                 </TableBody>
             </Table>
 
-            {editingUser && (
-                <EditUserData user={editingUser} open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)} onSave={handleUpdate} />
+            {edituser && editingUser && (
+                <EditUserData user={editingUser} open={edituser} onOpenChange={(open) => { if (!open) { setEdituser(false); setEditingUser(null); } }} onSave={handleUpdate} />
+            )}
+
+            {adduser && (
+                <AddUserDialog open={adduser} onOpenChange={(open) => !open && setAdduser(false)} />
             )}
         </div>
     );

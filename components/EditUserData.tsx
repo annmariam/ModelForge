@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -48,8 +48,8 @@ export function EditUserData({ user, open, onOpenChange, onSave }: EditUserDialo
     };
 
     const handleSave = () => {
-        onSave(editedUser)
-        onOpenChange(false)
+        onSave(editedUser);
+        onOpenChange(false);
     }
 
     return (
@@ -59,6 +59,15 @@ export function EditUserData({ user, open, onOpenChange, onSave }: EditUserDialo
                     <DialogTitle>Edit User</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                    <div className="flex justify-center items-center">
+                        <Image src={editedUser.photoURL} alt="Profile Preview" width={112} height={112} className="mb-2 h-28 w-28 rounded-full object-cover" />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="image" className="text-right"> Profile Image </Label>
+                        <div className="col-span-3">
+                            <Input id="image" type="file" accept="image/*" onChange={handleImageChange} />
+                        </div>
+                    </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="name" className="text-right"> Name </Label>
                         <Input id="name" name="name" value={editedUser.name} onChange={handleInputChange} className="col-span-3" />
@@ -80,13 +89,6 @@ export function EditUserData({ user, open, onOpenChange, onSave }: EditUserDialo
                                 <SelectItem value="printer">Printer</SelectItem>
                             </SelectContent>
                         </Select>
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="image" className="text-right"> Profile Image </Label>
-                        <div className="col-span-3">
-                            <Image src={editedUser.photoURL} alt="Profile Preview" width={64} height={64} className="mb-2 h-16 w-16 rounded-full object-cover" />
-                            <Input id="image" type="file" accept="image/*" onChange={handleImageChange} />
-                        </div>
                     </div>
                 </div>
                 <DialogFooter>
