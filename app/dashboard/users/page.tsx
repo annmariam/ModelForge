@@ -130,9 +130,9 @@ export default function Users() {
             
             {/* Filter and Search Options */}
             <div className="flex gap-4 mb-4">
-                <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={handleSearchChange} className="w-1/3" />
+                <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={handleSearchChange} className="w-full" />
                 <Select onValueChange={handleFilterChange} value={filter}>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-1/3">
                         <SelectValue placeholder="Filter by role" />
                     </SelectTrigger>
                     <SelectContent>
