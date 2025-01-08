@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function UploadIdea() {
     return (
-        <div>page</div>
+        <div className='flex flex-col py-16 gap-5'>Idea Page</div>
     )
 }
