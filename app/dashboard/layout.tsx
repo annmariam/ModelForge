@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
                 setLoading(false);
             }
         } else {
-            router.push("/login");
+            router.push("/");
         }
     }, [data, router, user]);
 
