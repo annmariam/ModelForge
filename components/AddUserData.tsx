@@ -22,10 +22,12 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
     const [image, setImage] = useState('');
     const [message, setMessage] = useState('');
     const [password, setPassword] = useState('');
+    const [catogory, setCatogory] = useState('');
 
     // Handle image upload
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.files);
+        setImage("https://github.com/shadcn.png");
     };
 
     // Handle adding data to the database
@@ -39,10 +41,18 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
             }, 5000) 
             return;
         }
+
+        if (role === 'printer' && !catogory) {
+            setError('Please select a catogory for the vendor.');
+            setTimeout(() => {
+                setError('')
+            }, 5000) 
+            return;
+        }
         
         // Call the register action
         try {
-            const response = await registerUser(email, password, name, image, role);
+            const response = await registerUser(email, password, name, image, role, catogory);
             if (response.success) {
                 setMessage(response.message);
             } else {
@@ -60,11 +70,10 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
         setImage('');
         setPassword('');
         
-        // Clear register status after 10 seconds
+        // close after 2 seconds
         setTimeout(() => {
-            setError('')
-            setMessage('')
-        }, 10000)    
+            onOpenChange(false);
+        }, 2000)    
     }
 
 
@@ -109,11 +118,28 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
                                     <SelectItem value="admin">Admin</SelectItem>
                                     <SelectItem value="customer">Customer</SelectItem>
                                     <SelectItem value="designer">Designer</SelectItem>
-                                    <SelectItem value="printer">Printer</SelectItem>
+                                    <SelectItem value="printer">Vendor</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
                     </div>
+                    {role === 'printer' && (
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="catogory" className="text-right">Vendor Catogory</Label>
+                            <Select onValueChange={(value) => setCatogory(value)}>
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="Select Catogory" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Catogory</SelectLabel>
+                                        <SelectItem value="arts">Arts</SelectItem>
+                                        <SelectItem value="engineering">Engineering</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
                 </div>
                 <DialogFooter>
                     <Button type="submit" onClick={handleSubmit}>Add User</Button>

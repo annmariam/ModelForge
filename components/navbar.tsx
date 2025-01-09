@@ -15,7 +15,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 
 const nav_left = [
     { name: "3D Models", href: "/3d-models" },
-    { name: "Generate", href: "/slicing" },
+    { name: "Generate", href: "/upload/idea" },
 ]
 
 const nav_right = [
@@ -66,42 +66,44 @@ export function Navbar() {
                             {user ? (
                                 <div className="flex items-center gap-3">
                                     {/* Upload Design */}
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button className="rounded-2xl p-3 text-sm font-medium border-2 bg-background dark:text-white hover:dark:text-black text-black hover:bg-gray-200 hover:text-black">
-                                                <Upload size={20} /> Upload
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="bg-background p-2">
-                                            <DropdownMenuItem onClick={() => router.push("/upload")} className="hover:bg-gray-200 hover:text-black">
-                                                <Upload size={20} className="mr-2" /> 
-                                                <div className="flex flex-col">
-                                                    <span>Upload Model</span>
-                                                    <span className="text-sm text-gray-400">Upload your 3D model.</span>
+                                    {data?.role === "customer" && (
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button className="rounded-2xl p-3 text-sm font-medium border-2 bg-background dark:text-white hover:dark:text-black text-black hover:bg-gray-200 hover:text-black">
+                                                    <Upload size={20} /> Upload
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end" className="bg-background p-2">
+                                                <DropdownMenuItem onClick={() => router.push("/upload")} className="hover:bg-gray-200 hover:text-black">
+                                                    <Upload size={20} className="mr-2" /> 
+                                                    <div className="flex flex-col">
+                                                        <span>Upload Model</span>
+                                                        <span className="text-sm text-gray-400">Upload your 3D model.</span>
+                                                    </div>
+                                                </DropdownMenuItem>
+                                                <div className="py-2 px-4">
+                                                    <Separator className="bg-white" />
                                                 </div>
-                                            </DropdownMenuItem>
-                                            <div className="py-2 px-4">
-                                                <Separator className="bg-white" />
-                                            </div>
-                                            <DropdownMenuItem onClick={() => router.push("/upload/idea")} className="hover:bg-gray-200 hover:text-black">
-                                                <Plus size={20} className="mr-2" />
-                                                <div className="flex flex-col">
-                                                    <span>Upload Idea</span>
-                                                    <span className="text-sm text-gray-400">Upload your idea to generate the modal that you design.</span>
+                                                <DropdownMenuItem onClick={() => router.push("/upload/idea")} className="hover:bg-gray-200 hover:text-black">
+                                                    <Plus size={20} className="mr-2" />
+                                                    <div className="flex flex-col">
+                                                        <span>Generate Model from your Idea</span>
+                                                        <span className="text-sm text-gray-400">Upload your idea to generate the modal that you design.</span>
+                                                    </div>
+                                                </DropdownMenuItem>
+                                                <div className="py-2 px-4">
+                                                    <Separator className="bg-white" />
                                                 </div>
-                                            </DropdownMenuItem>
-                                            <div className="py-2 px-4">
-                                                <Separator className="bg-white" />
-                                            </div>
-                                            <DropdownMenuItem onClick={() => router.push("/upload/import")} className="hover:bg-gray-200 hover:text-black">
-                                                <Download size={20} className="mr-2" />
-                                                <div className="flex flex-col">
-                                                    <span>Import Modal From third-party website</span>
-                                                    <span className="text-sm text-gray-400">Supported: Printables and Thingiverse</span>
-                                                </div>
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                                <DropdownMenuItem onClick={() => router.push("/upload/import")} className="hover:bg-gray-200 hover:text-black">
+                                                    <Download size={20} className="mr-2" />
+                                                    <div className="flex flex-col">
+                                                        <span>Import Modal From third-party website</span>
+                                                        <span className="text-sm text-gray-400">Supported: Printables and Thingiverse</span>
+                                                    </div>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    )}
 
                                     {/* Avatar */}
                                     <DropdownMenu>

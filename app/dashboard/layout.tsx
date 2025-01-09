@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/config/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
-import { BadgeCheck, ChevronLeft, ChevronRight, FileUp, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundPen, ShoppingBasket, Settings } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2 } from "lucide-react";
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
@@ -31,7 +31,8 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
     const navItems = {
         admin: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "Assign Designs", href: "/dashboard/assign-designs", icon: PackagePlus },
+            { name: "Products", href: "/dashboard/products", icon: PackagePlus },
+            { name: "Assign Designs", href: "/dashboard/assign-designs", icon: Package2 },
             { name: "Assign Orders", href: "/dashboard/assign-orders", icon: ShoppingBasket },
             { name: "Users", href: "/dashboard/users", icon: Users },
             { name: "Settings", href: "/dashboard/settings", icon: Settings },
@@ -39,23 +40,17 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         customer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
             { name: "Models", href: "/dashboard/models", icon: PackageOpen },
-            { name: "My Orders", href: "/dashboard/orders", icon: BadgeCheck },
+            { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
             { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
         designer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
             { name: "Designs", href: "/dashboard/designs", icon: PackageOpen },
-            { name: "Submit Design", href: "/dashboard/designs/submit", icon: FileUp },
-            { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
         printer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "Assigned Order", href: "/dashboard/printer", icon: PackageOpen },
-            { name: "Completed Orders", href: "/dashboard/printer/completed", icon: BadgeCheck },
-            { name: "Printer Status", href: "/dashboard/printer/status", icon: PackageOpen },
-            { name: "Designs", href: "/dashboard/designs", icon: PackageOpen },
-            { name: "Submit Design", href: "/dashboard/designs/submit", icon: FileUp },
-            { name: "Settings", href: "/dashboard/settings", icon: Settings },
+            { name: "xMy Orders", href: "/dashboard/orders", icon: ShoppingCart },
+            { name: "Order", href: "/dashboard/printer", icon: PackageOpen },
         ],
     };
 

@@ -4,6 +4,7 @@ import fetchUsers from "@/actions/fetchUsers";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { deleteUser } from "@/actions/deleteUser";
 import { Loader, Pencil, Trash2 } from "lucide-react";
 import { AddUserDialog } from "@/components/AddUserData";
 import { EditUserData } from "@/components/EditUserData";
@@ -26,6 +27,7 @@ export default function Users() {
     const [adduser, setAdduser] = useState<boolean>(false);
     const [edituser, setEdituser] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [message, setMessage] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [userData, setUserData] = useState<UserCollection[]>([]);
     const [filteredData, setFilteredData] = useState<UserCollection[]>([]);
@@ -44,8 +46,19 @@ export default function Users() {
     };
 
     // Delete Data
-    const handleDelete = (userID: string) => {
+    const handleDelete = async(userID: string) => {
         console.log("Delete user with ID:", userID);
+        const response = await deleteUser(userID);
+        if (response.success) {
+            setMessage(response.message);
+        } else {    
+            setError(response.message);
+        }
+        fetch();
+        setTimeout(() => {
+            setError("");
+            setMessage("");
+        }, 5000);
     };
 
     // Fetch users from the database
@@ -72,7 +85,7 @@ export default function Users() {
             case "designer":
                 return <Badge className="bg-green-500 text-white">Designer</Badge>;
             case "printer":
-                return <Badge className="bg-purple-500 text-white">Printer</Badge>;
+                return <Badge className="bg-purple-500 text-white">Vendor</Badge>;
             default:
                 return <Badge className="bg-gray-500 text-white">--</Badge>;
         }
@@ -110,9 +123,6 @@ export default function Users() {
 
     useEffect(() => {
         fetch();
-    }, []);
-
-    useEffect(() => {
         applyFilters();
     }, [applyFilters, filter, searchQuery]);
 
@@ -127,6 +137,7 @@ export default function Users() {
     return (
         <div>
             {error && <div className="alert alert-error">{error}</div>}
+            {message && <div className="alert alert-success">{message}</div>}
             
             {/* Filter and Search Options */}
             <div className="flex gap-4 mb-4">

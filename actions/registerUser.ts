@@ -4,7 +4,7 @@ import { auth, db } from "@/config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
-export async function registerUser(email: string, password: string, name: string, image: string, role: string = 'customer') {
+export async function registerUser(email: string, password: string, name: string, image: string, role: string = 'customer', catogory: string = '') {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, 'users', userCredential.user.uid), {
@@ -12,6 +12,7 @@ export async function registerUser(email: string, password: string, name: string
             name: name,
             photoURL: image,
             role: role,
+            catogory: catogory,
             timestamp: serverTimestamp()
         });
         console.log('User registered:', userCredential.user.uid);
