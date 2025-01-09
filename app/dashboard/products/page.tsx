@@ -1,10 +1,9 @@
 "use client";
 
 import Image from 'next/image';
-import { Loader, Upload } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
