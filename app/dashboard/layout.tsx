@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/config/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundIcon as UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2 } from 'lucide-react';
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
@@ -49,7 +50,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         ],
         printer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "xMy Orders", href: "/dashboard/orders", icon: ShoppingCart },
+            { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
             { name: "Order", href: "/dashboard/printer", icon: PackageOpen },
         ],
     };
@@ -78,48 +79,78 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
     }
 
     return (
-        <div className="flex h-[calc(100vh-82px)] bg-gray-100 dark:bg-gray-900">
-            {/* Sidebar */}
-            <aside className={`transition-transform duration-300 bg-white shadow-md dark:bg-gray-800 ${sidebarOpen ? "w-64" : "w-16"} flex flex-col`}>
-                <div className="flex items-center justify-between p-2">
-                    <div className={`${sidebarOpen ? "flex" : "hidden"} flex-col`}>
-                        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">3D Print Hub</h2>
-                        {roleBadge(role)}
+        <TooltipProvider>
+            <div className="flex h-[calc(100vh-82px)] bg-gray-100 dark:bg-gray-900">
+                {/* Sidebar */}
+                <aside className={`transition-transform duration-300 bg-white shadow-md dark:bg-gray-800 ${sidebarOpen ? "w-64" : "w-16"} flex flex-col`}>
+                    <div className="flex items-center justify-between p-2">
+                        <div className={`${sidebarOpen ? "flex" : "hidden"} flex-col`}>
+                            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">3D Print Hub</h2>
+                            {roleBadge(role)}
+                        </div>
+                        <Button variant="ghost" onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-800 dark:text-gray-100">
+                            {sidebarOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+                        </Button>
                     </div>
-                    <Button variant="ghost" onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-800 dark:text-gray-100">
-                        {sidebarOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
-                    </Button>
-                </div>
-                <nav className="flex-grow">
-                    {navItems[role]?.map((item) => (
-                        <Link key={item.name} href={item.href} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} px-4 py-2 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${pathName === item.href ? "bg-gray-200 dark:bg-gray-700" : ""}`}>
-                            <item.icon size={24} className={`${pathName === item.href ? "text-red-600 dark:text-red-400" : ""}`} />
-                            <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}> {item.name} </span>
-                        </Link>
-                    ))}
-                </nav>
-                <div className={`flex flex-col w-full ${sidebarOpen ? "items-start" : "items-center"}`}>
-                    <button onClick={() => router.push("/dashboard/profile")} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
-                        <UserRoundPen size={24} className={`${pathName === "/dashboard/profile" ? "text-red-600 dark:text-red-400" : ""}`} />
-                        <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Profile</span>
-                    </button>
-                    <button onClick={logOut} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
-                        <LogOut size={24} />
-                        <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Log Out</span>
-                    </button>
-                </div>
-            </aside>
+                    <nav className="flex-grow">
+                        {navItems[role]?.map((item) => (
+                            <Tooltip key={item.name} delayDuration={300}>
+                                <TooltipTrigger asChild>
+                                    <Link href={item.href} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} px-4 py-2 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 ${pathName === item.href ? "bg-gray-200 dark:bg-gray-700" : ""}`}>
+                                        <item.icon size={24} className={`${pathName === item.href ? "text-red-600 dark:text-red-400" : ""}`} />
+                                        <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>{item.name}</span>
+                                    </Link>
+                                </TooltipTrigger>
+                                {!sidebarOpen && (
+                                    <TooltipContent side="right">
+                                        <p>{item.name}</p>
+                                    </TooltipContent>
+                                )}
+                            </Tooltip>
+                        ))}
+                    </nav>
+                    <div className={`flex flex-col w-full ${sidebarOpen ? "items-start" : "items-center"}`}>
+                        <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                                <button onClick={() => router.push("/dashboard/profile")} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
+                                    <UserRoundPen size={24} className={`${pathName === "/dashboard/profile" ? "text-red-600 dark:text-red-400" : ""}`} />
+                                    <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Profile</span>
+                                </button>
+                            </TooltipTrigger>
+                            {!sidebarOpen && (
+                                <TooltipContent side="right">
+                                    <p>Profile</p>
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
+                        <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                                <button onClick={logOut} className={`flex items-center ${sidebarOpen ? "justify-start" : "justify-center"} w-full px-4 py-2 text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700`}>
+                                    <LogOut size={24} />
+                                    <span className={`${sidebarOpen ? "ml-2" : "hidden"} block`}>Log Out</span>
+                                </button>
+                            </TooltipTrigger>
+                            {!sidebarOpen && (
+                                <TooltipContent side="right">
+                                    <p>Log Out</p>
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
+                    </div>
+                </aside>
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-y-auto">
-                <div className="mx-auto py-6 sm:px-6 lg:px-8">
-                    <div className='w-full flex justify-between items-center pb-5'>                        
-                        <span className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{navItems[role].find(link => link.href === pathName)?.name}</span>
-                        <Button variant={"destructive"} onClick={logOut}>Logout</Button>
+                {/* Main Content */}
+                <main className="flex-1 overflow-y-auto">
+                    <div className="mx-auto py-6 sm:px-6 lg:px-8">
+                        <div className='w-full flex justify-between items-center pb-5'>                        
+                            <span className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{navItems[role].find(link => link.href === pathName)?.name}</span>
+                            <Button variant={"destructive"} onClick={logOut}>Logout</Button>
+                        </div>
+                        <div>{children}</div>
                     </div>
-                    <div>{children}</div>
-                </div>
-            </main>
-        </div>
+                </main>
+            </div>
+        </TooltipProvider>
     );
 }
+

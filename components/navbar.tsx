@@ -15,7 +15,6 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 
 const nav_left = [
     { name: "3D Models", href: "/3d-models" },
-    { name: "Generate", href: "/upload/idea" },
 ]
 
 const nav_right = [
