@@ -158,7 +158,7 @@ export default function Users() {
             </div>
 
             {addPrinter && id && (
-                <PrinterDevicesDialog open={addPrinter} onOpenChange={(open) => !open} userID={id} />
+                <PrinterDevicesDialog open={addPrinter} onOpenChange={(open) => !open && setAddPrinter(false)} userID={id} />
             )}
 
             {edituser && editingUser && (

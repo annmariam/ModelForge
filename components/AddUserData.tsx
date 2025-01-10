@@ -8,16 +8,10 @@ import { Button } from "@/components/ui/button";
 import { registerUser } from "@/actions/registerUser";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, X } from 'lucide-react';
 
 interface AddUserDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-}
-
-interface PrinterDevice {
-    name: string;
-    status: 'active' | 'inactive';
 }
 
 export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
@@ -29,7 +23,6 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
     const [message, setMessage] = useState('');
     const [password, setPassword] = useState('');
     const [category, setCategory] = useState('');
-    const [printerDevices, setPrinterDevices] = useState<PrinterDevice[]>([]);
 
     // Handle image upload
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,28 +34,6 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
             };
             reader.readAsDataURL(file);
         }
-    };
-
-    // Handle adding printer device
-    const addPrinterDevice = () => {
-        setPrinterDevices([...printerDevices, { name: '', status: 'active' }]);
-    };
-
-    // Handle removing printer device
-    const removePrinterDevice = (index: number) => {
-        const updatedDevices = printerDevices.filter((_, i) => i !== index);
-        setPrinterDevices(updatedDevices);
-    };
-
-    // Handle updating printer device
-    const updatePrinterDevice = (index: number, field: 'name' | 'status', value: string) => {
-        const updatedDevices = printerDevices.map((device, i) => {
-            if (i === index) {
-                return { ...device, [field]: value };
-            }
-            return device;
-        });
-        setPrinterDevices(updatedDevices);
     };
 
     // Handle adding data to the database
@@ -84,15 +55,7 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
             }, 5000);
             return;
         }
-
-        if (role === 'printer' && printerDevices.length === 0) {
-            setError('Please add at least one printer device.');
-            setTimeout(() => {
-                setError('');
-            }, 5000);
-            return;
-        }
-        
+       
         // Call the register action
         try {
             const response = await registerUser(email, password, name, image, role, category);
@@ -113,7 +76,6 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
         setImage('');
         setPassword('');
         setCategory('');
-        setPrinterDevices([]);
         
         // close after 2 seconds
         setTimeout(() => {
@@ -168,59 +130,21 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
                         </Select>
                     </div>
                     {role === 'printer' && (
-                        <>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="category" className="text-right">Vendor Category</Label>
-                                <Select onValueChange={(value) => setCategory(value)}>
-                                    <SelectTrigger className="col-span-3">
-                                        <SelectValue placeholder="Select Category" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Category</SelectLabel>
-                                            <SelectItem value="arts">Arts</SelectItem>
-                                            <SelectItem value="engineering">Engineering</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Printer Devices</Label>
-                                {printerDevices.map((device, index) => (
-                                    <div key={index} className="flex items-center space-x-2">
-                                        <Input 
-                                            placeholder="Device Name" 
-                                            value={device.name} 
-                                            onChange={(e) => updatePrinterDevice(index, 'name', e.target.value)}
-                                        />
-                                        <Select 
-                                            value={device.status} 
-                                            onValueChange={(value) => updatePrinterDevice(index, 'status', value as 'active' | 'inactive')}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="active">Active</SelectItem>
-                                                <SelectItem value="inactive">Inactive</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <Button 
-                                            type="button" 
-                                            variant="ghost" 
-                                            size="icon"
-                                            onClick={() => removePrinterDevice(index)}
-                                            aria-label="Remove printer device"
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button type="button" variant="outline" onClick={addPrinterDevice} className="w-full">
-                                    <PlusCircle className="mr-2 h-4 w-4" /> Add Printer Device
-                                </Button>
-                            </div>
-                        </>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="category" className="text-right">Vendor Category</Label>
+                            <Select onValueChange={(value) => setCategory(value)}>
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="Select Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Category</SelectLabel>
+                                        <SelectItem value="arts">Arts</SelectItem>
+                                        <SelectItem value="engineering">Engineering</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     )}
                     <DialogFooter>
                         <Button type="submit">Add User</Button>
