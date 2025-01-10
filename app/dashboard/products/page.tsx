@@ -5,37 +5,38 @@ import { Loader } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AddProducts } from "@/components/AddProduct";
 import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
-import { ProductDialogModal } from "@/components/ProductDialogModal";
+import fetchallProducts from "@/actions/fetchallProducts";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Product {
     productID: string
-    name: string
-    price: number
-    image: string
-    description: string
-    category: string
-    material: string
-    size: string
+    name: string;
+    price: number;
+    image: string;
+    description: string;
+    category: string;
+    material: string;
+    size: string;
+    "model file": string;
 }
 
 export default function Products() {
     const [filter, setFilter] = useState<string>("all")
     const [loading, setLoading] = useState<boolean>(true)
+    const [addData, setAddData] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState<string>("")
     const [productsData, setProductsData] = useState<Product[]>([])
     const [filteredData, setFilteredData] = useState<Product[]>([])
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false)
 
     // Update Data
     const handleUpdate = (product: Product) => {
         setSelectedProduct(product)
-        setIsUpdateDialogOpen(true)
     }
 
     // Delete Data
@@ -46,39 +47,8 @@ export default function Products() {
 
     // Fetch products from database
     const fetchProducts = async(): Promise<Product[]> => {
-        // Simulated API call
-        return [
-            {
-                productID: "1",
-                name: "Artistic Sculpture",
-                price: 400,
-                image: "/placeholder.svg",
-                description: "A beautiful abstract sculpture perfect for modern interiors.",
-                category: "Arts",
-                material: "PLA",
-                size: "45x50x55 mm",
-            },
-            {
-                productID: "2",
-                name: "Handcrafted Vase",
-                price: 250,
-                image: "/placeholder.svg",
-                description: "Elegant handcrafted vase with intricate patterns.",
-                category: "Crafts",
-                material: "ABS",
-                size: "30x40x50 mm",
-            },
-            {
-                productID: "3",
-                name: "Modern Desk Organizer",
-                price: 300,
-                image: "/placeholder.svg",
-                description: "Sleek and functional desk organizer for a tidy workspace.",
-                category: "Design",
-                material: "PETG",
-                size: "60x70x80 mm",
-            }
-        ]
+        const data = await fetchallProducts()
+        return data;
     }
 
     // Filter Data
@@ -118,41 +88,6 @@ export default function Products() {
         applyFilters()
     }, [applyFilters])
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (file) {
-            // Simulating file upload and creating a new product
-            const newProduct: Product = {
-                productID: (productsData.length + 1).toString(),
-                name: file.name,
-                price: 0,
-                image: URL.createObjectURL(file),
-                description: "",
-                category: "Uncategorized",
-                material: "Unknown",
-                size: "0x0x0 mm",
-            }
-            setSelectedProduct(newProduct)
-            setIsUpdateDialogOpen(true)
-        }
-    }
-
-    const handleProductUpdate = (updatedProduct: Product) => {
-        if (selectedProduct?.productID) {
-            // Update existing product
-            setProductsData(prevData => 
-                prevData.map(product => 
-                    product.productID === updatedProduct.productID ? updatedProduct : product
-                )
-            )
-        } else {
-            // Add new product
-            setProductsData(prevData => [...prevData, updatedProduct])
-        }
-        setIsUpdateDialogOpen(false)
-        setSelectedProduct(null)
-    }
-
     if (loading) {
         return (
             <div className="flex items-center justify-center h-[calc(100vh-82px)] spinner">
@@ -174,13 +109,12 @@ export default function Products() {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="Arts">Arts</SelectItem>
+                        <SelectItem value="arts">Arts</SelectItem>
                         <SelectItem value="Crafts">Crafts</SelectItem>
                         <SelectItem value="Design">Design</SelectItem>
                     </SelectContent>
                 </Select>
-                <input type="file" id="fileUpload" className="hidden" onChange={handleFileUpload} />
-                <Button variant={"default"} onClick={() => document.getElementById('fileUpload')?.click()}>Add Product</Button>
+                <Button variant={"default"} onClick={() => setAddData(true)}>Add Product</Button>
             </div>
 
             {/* Design Cards */}
@@ -216,7 +150,10 @@ export default function Products() {
                 ))}
             </div>
 
-            <ProductDialogModal isOpen={isUpdateDialogOpen} onClose={() => setIsUpdateDialogOpen(false)} product={selectedProduct} onUpdate={handleProductUpdate} />
+            {selectedProduct && <AddProducts open={addData} onOpenChange={setAddData} product={selectedProduct} />}
+
+            {addData && <AddProducts open={addData} onOpenChange={setAddData} />}
+
         </div>
     )
 }

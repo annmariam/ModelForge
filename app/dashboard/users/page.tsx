@@ -1,17 +1,16 @@
 "use client";
 
-import fetchUsers from "@/actions/fetchUsers";
-import { Badge } from "@/components/ui/badge";
+import { Loader } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import fetchUsers from "@/actions/fetchallUsers";
+import { UserCard } from "@/components/UserCard";
 import { deleteUser } from "@/actions/deleteUser";
-import { Loader, Pencil, Trash2 } from "lucide-react";
 import { AddUserDialog } from "@/components/AddUserData";
 import { EditUserData } from "@/components/EditUserData";
 import React, { useState, useEffect, useCallback } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PrinterDevicesDialog } from "@/components/PrinterDevicesDialog";
 
 interface UserCollection {
     userID: string;
@@ -27,11 +26,13 @@ export default function Users() {
     const [adduser, setAdduser] = useState<boolean>(false);
     const [edituser, setEdituser] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [message, setMessage] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [message, setMessage] = useState<string | null>(null);
+    const [addPrinter, setAddPrinter] = useState<boolean>(false); 
     const [userData, setUserData] = useState<UserCollection[]>([]);
     const [filteredData, setFilteredData] = useState<UserCollection[]>([]);
     const [editingUser, setEditingUser] = useState<UserCollection | null>(null);
+    const [id, setID] = useState<string>("");
 
     // Edit Data
     const handleEdit = (user: UserCollection) => {
@@ -44,6 +45,12 @@ export default function Users() {
     const handleUpdate = (user: UserCollection) => {
         console.log("Update user with ID:", user.userID);
     };
+
+    // Handle Add Printer Details
+    const handlePrinter = (userID: string) => {
+        setAddPrinter(true);
+        setID(userID);
+    }
 
     // Delete Data
     const handleDelete = async(userID: string) => {
@@ -72,22 +79,6 @@ export default function Users() {
             setError("Error fetching data");
         } finally {
             setLoading(false);
-        }
-    };
-
-    // Badge color based on role
-    const roleBadge = (role: string) => {
-        switch (role) {
-            case "admin":
-                return <Badge className="bg-red-500 text-white">Admin</Badge>;
-            case "customer":
-                return <Badge className="bg-blue-500 text-white">Customer</Badge>;
-            case "designer":
-                return <Badge className="bg-green-500 text-white">Designer</Badge>;
-            case "printer":
-                return <Badge className="bg-purple-500 text-white">Vendor</Badge>;
-            default:
-                return <Badge className="bg-gray-500 text-white">--</Badge>;
         }
     };
 
@@ -157,49 +148,18 @@ export default function Users() {
                 <Button variant={"default"} onClick={() => setAdduser(true)}>Add User</Button>
             </div>
 
-            <Table>
-                <TableCaption>A list of users in the system.</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Photo</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {filteredData.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={5} className="text-center">
-                                No users found.
-                            </TableCell>
-                        </TableRow>
-                    ) : (
-                        filteredData.map((user) => (
-                            <TableRow key={user.userID}>
-                                <TableCell>
-                                    <Avatar>
-                                        <AvatarImage src={user.photoURL} alt={user.name} />
-                                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                </TableCell>
-                                <TableCell>{user.name}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{roleBadge(user.role)}</TableCell>
-                                <TableCell className="text-right">
-                                    <Button onClick={() => handleEdit(user)} variant="ghost" size="sm" className="mr-2">
-                                        <Pencil size={16} />
-                                    </Button>
-                                    <Button onClick={() => handleDelete(user.userID)} variant="ghost" size="sm">
-                                        <Trash2 size={16} />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+            {/* UserCard View */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredData.length === 0 ? (
+                    <div className="alert alert-info">No users found</div>
+                ) : (
+                    filteredData.map((user) => ( <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} /> ))
+                )}
+            </div>
+
+            {addPrinter && id && (
+                <PrinterDevicesDialog open={addPrinter} onOpenChange={(open) => !open} userID={id} />
+            )}
 
             {edituser && editingUser && (
                 <EditUserData user={editingUser} open={edituser} onOpenChange={(open) => { if (!open) { setEdituser(false); setEditingUser(null); } }} onSave={handleUpdate} />
