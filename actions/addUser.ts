@@ -15,6 +15,7 @@ export default async function addUser(user: UserType) {
         await setDoc(docRef, {
             name: user.displayName,
             email: user.email,
+            photoURL: user.photoURL,
             role: "customer",
             timestamp: serverTimestamp(),
         });
