@@ -46,9 +46,20 @@ export default function Products() {
     }
 
     // Fetch products from database
-    const fetchProducts = async(): Promise<Product[]> => {
-        const data = await productActions.fetchProducts()
-        return data;
+    const fetchData = async() => {
+        const response = await productActions.fetchProducts()
+        if (response.success) {
+            if (response.data) {
+                setProductsData(response.data)
+                setFilteredData(response.data)
+            } else {
+                setError("Failed to fetch products data")
+            }
+        } else {
+            if (response.message) {
+                setError(response.message)
+            }
+        }
     }
 
     // Filter Data
@@ -71,9 +82,7 @@ export default function Products() {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await fetchProducts()
-                setProductsData(data)
-                setFilteredData(data)
+                await fetchData()
             } catch (error) {
                 console.error(error)
                 setError("An error occurred while fetching data")

@@ -72,8 +72,16 @@ export default function Users() {
     const fetch = async () => {
         try {
             const data = await userActions.fetchUsers();
-            setUserData(data);
-            setFilteredData(data);
+            if (data.success) {
+                if (data.user) {
+                    setUserData(data.user);
+                    setFilteredData(data.user);
+                }
+            } else {
+                if (data.message) {
+                    setError(data.message);
+                }
+            }
         } catch (error) {
             console.error(error);
             setError("Error fetching data");
