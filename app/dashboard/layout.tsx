@@ -29,12 +29,13 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         }
     }, [data, router, user]);
 
+    // Navigation items based on role
     const navItems = {
         admin: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+            { name: "Designs", href: "/dashboard/assign-designs", icon: Package2 },
+            { name: "Orders", href: "/dashboard/assign-orders", icon: ShoppingBasket },
             { name: "Products", href: "/dashboard/products", icon: PackagePlus },
-            { name: "Assign Designs", href: "/dashboard/assign-designs", icon: Package2 },
-            { name: "Assign Orders", href: "/dashboard/assign-orders", icon: ShoppingBasket },
             { name: "Users", href: "/dashboard/users", icon: Users },
             { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
@@ -55,6 +56,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         ],
     };
 
+    // Badge color based on role
     const roleBadge = (role: string) => {
         switch (role) {
             case "admin":

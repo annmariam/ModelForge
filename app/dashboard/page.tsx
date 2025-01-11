@@ -16,7 +16,7 @@ interface DashboardCardProps {
 
 const DashboardData = (id: string) => ({
     admin: [
-        { title: "Total Models", fetchFunction: dashboardActions.fetchModelCount, icon: PackageOpen },
+        { title: "Total Design", fetchFunction: dashboardActions.fetchModelCount, icon: PackageOpen },
         { title: "Total Orders", fetchFunction: dashboardActions.fetchOrderCount, icon: ShoppingCart },
         { title: "Total Products", fetchFunction: dashboardActions.fetchProductCount, icon: PackagePlus },
         { title: "Total Users", fetchFunction: dashboardActions.fetchUserCount, icon: Users },

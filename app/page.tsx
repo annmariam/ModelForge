@@ -61,7 +61,7 @@ export default function Home() {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="aspect-square relative mb-4">
-                                            <Image src={`/placeholder.svg?height=300&width=300&text=${encodeURIComponent(model.name)}`} alt={model.name} layout="fill" objectFit="cover" className="rounded-md" />
+                                            <Image src={`/placeholder.svg?height=300&width=300&text=${encodeURIComponent(model.name)}`}  width={500} height={500} alt={model.name} className="rounded-md object-fill" />
                                         </div>
                                         <p className="text-sm text-gray-500">{model.category}</p>
                                     </CardContent>

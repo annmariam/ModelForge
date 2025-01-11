@@ -1,6 +1,7 @@
 "use client"
 
 import { Loader } from 'lucide-react';
+import orderActions from '@/actions/order';
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,39 +50,21 @@ export default function AssignOrders() {
 
     // Fetch orders from the database
     const fetchOrders = async (): Promise<Order[]> => {
-        // Mock data fetching function
-        return [
-            {
-                orderID: "1",
-                customerID: "123",
-                status: "pending",
-                material: "cotton",
-                quantity: 10,
-                size: "M",
-                color: "red",
-                fileUrl: "Sample design 1",
-            },
-            {
-                orderID: "2",
-                customerID: "456",
-                status: "approved",
-                material: "polyester",
-                quantity: 5,
-                size: "L",
-                color: "blue",
-                fileUrl: "Sample design 2",
-            },
-            {
-                orderID: "3",
-                customerID: "789",
-                status: "rejected",
-                material: "silk",
-                quantity: 3,
-                size: "S",
-                color: "green",
-                fileUrl: "Sample design 3",
-            },
-        ]
+        const response = await orderActions.fetchOrders()
+        if (response.status) {
+            if (response.data) {
+                return response.data;
+            } else if(response.message) {
+                setError(response.message)
+                return []
+            } else {
+                setError("Error fetching data")
+                return []
+            }
+        } else {
+            setError("No data")
+            return []
+        }
     }
 
     // Filter Data

@@ -1,6 +1,7 @@
 "use client"
 
 import { Loader } from 'lucide-react';
+import designActions from '@/actions/design';
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,14 +12,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Design {
-  designID: string
-  customerID: string
-  status: string
-  material: string
-  quantity: number
-  size: string
-  color: string
-  description: string
+    designID: string;
+    customerID: string;
+    status: string;
+    material: string;
+    quantity: number;
+    size: string;
+    color: string;
+    description: string;
 }
 
 export default function AssignDesign() {
@@ -48,40 +49,20 @@ export default function AssignDesign() {
     }
 
     // Fetch designs from the database
-    const fetchDesigns = async (): Promise<Design[]> => {
-        // Mock data fetching function
-        return [
-            {
-                designID: "1",
-                customerID: "123",
-                status: "pending",
-                material: "cotton",
-                quantity: 10,
-                size: "M",
-                color: "red",
-                description: "Sample design 1",
-            },
-            {
-                designID: "2",
-                customerID: "456",
-                status: "approved",
-                material: "polyester",
-                quantity: 5,
-                size: "L",
-                color: "blue",
-                description: "Sample design 2",
-            },
-            {
-                designID: "3",
-                customerID: "789",
-                status: "rejected",
-                material: "silk",
-                quantity: 3,
-                size: "S",
-                color: "green",
-                description: "Sample design 3",
-            },
-        ]
+    const fetchDesigns = async () => {
+        const response = await designActions.fetchDesigns()
+        if (response.success) {
+            if (response.data) {
+                setDesignData(response.data)
+                setFilteredData(response.data)
+            } else {
+                setError("No data found")
+            }
+        } else if (response.message) {
+            setError(response.message)
+        } else {
+            setError("Error fetching data");
+        }
     }
 
     // Filter Data
@@ -101,9 +82,7 @@ export default function AssignDesign() {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await fetchDesigns()
-                setDesignData(data)
-                setFilteredData(data)
+                await fetchDesigns()
             } catch (error) {
                 console.error(error)
                 setError("Error fetching data")

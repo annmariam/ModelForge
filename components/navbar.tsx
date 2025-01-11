@@ -10,7 +10,7 @@ import { useAuth } from "@/config/AuthProvider";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Download, LogOut, Plus, Settings, Upload, User } from "lucide-react";
+import { LogOut, PackageOpen, PackagePlus, Users, ShoppingBasket, ShoppingCart, Settings, Package2, Download, Plus, Upload, User } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 
 const nav_left = [
@@ -25,6 +25,8 @@ const nav_right = [
 export function Navbar() {
     const router = useRouter();
     const { user, data, logOut } = useAuth();
+
+    const role = data?.role;
 
     // Badge color based on role
     const roleBadgeColor = (role: string) => {
@@ -41,6 +43,37 @@ export function Navbar() {
                 return "bg-gray-500";
         }
     };
+
+    // Navigation items based on role
+    const loginNav = (() => {
+        switch (role) {
+            case "admin":
+                return [
+                    { name: "Designs", href: "/dashboard/assign-designs", icon: Package2 },
+                    { name: "Orders", href: "/dashboard/assign-orders", icon: ShoppingBasket },
+                    { name: "Products", href: "/dashboard/products", icon: PackagePlus },
+                    { name: "Users", href: "/dashboard/users", icon: Users },
+                    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+                ];
+            case "customer":
+                return [
+                    { name: "Models", href: "/dashboard/models", icon: PackageOpen },
+                    { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
+                    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+                ];
+            case "designer":
+                return [
+                    { name: "Designs", href: "/dashboard/designs", icon: PackageOpen },
+                ];
+            case "printer":
+                return [
+                    { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
+                    { name: "Order", href: "/dashboard/printer", icon: PackageOpen },
+                ];
+            default:
+                return [];
+        }
+    })();
 
     return (
         <nav className="sticky top-0 z-50 border-b bg-background">
@@ -129,12 +162,12 @@ export function Navbar() {
                                                 <User className="mr-2 h-4 w-4" />
                                                 <span>{data?.role.charAt(0).toUpperCase() + data?.role.slice(1)} Dashboard</span>
                                             </DropdownMenuItem>
-                                            {data?.role !== "admin" && (
-                                                <DropdownMenuItem onClick={() => router.push("/dashboard/orders")} className="hover:bg-gray-200 hover:text-black">
-                                                    <Settings className="mr-2 h-4 w-4" />
-                                                    <span>Orders</span>
+                                            {Array.isArray(loginNav) && loginNav.map((item) => (
+                                                <DropdownMenuItem key={item.name} onClick={() => router.push(item.href)} className="hover:bg-gray-200 hover:text-black">
+                                                    <item.icon className="mr-2 h-4 w-4" />
+                                                    <span>{item.name}</span>
                                                 </DropdownMenuItem>
-                                            )}
+                                            ))}
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem onClick={() => { logOut(); }} className="hover:bg-gray-200 hover:text-black">
                                                 <LogOut className="mr-2 h-4 w-4" />
