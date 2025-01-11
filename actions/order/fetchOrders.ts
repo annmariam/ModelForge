@@ -14,7 +14,13 @@ interface Order {
     fileUrl: string;
 }
 
-export async function fetchOrders(): Promise<Order[]> {
+interface OrderResponse {
+    status: boolean;
+    data?: Order[];
+    message?: string;
+}
+
+export async function fetchOrders(): Promise<OrderResponse> {
     try {
         const order = await getDocs(collection(db, "orders"));
         const orderData: Order[] = [];
@@ -32,15 +38,15 @@ export async function fetchOrders(): Promise<Order[]> {
                     fileUrl: doc.data().fileUrl
                 });
             });
-            return orderData;
+            return { status: true, data: orderData };
 
         } else {
             console.warn("No such document!");
-            return [];
+            return { status: false, message: "No order found" };
 
         }
     } catch (error) {
         console.error("Error fetching orders: ", error);
-        return [];
+        return { status: false, message: "Error fetching data" };
     }
 }

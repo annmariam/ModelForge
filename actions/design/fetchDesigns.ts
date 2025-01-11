@@ -14,7 +14,13 @@ interface Design {
     description: string;
 }
 
-export async function fetchDesigns(): Promise<Design[]> {
+interface DesignResponse {
+    success: boolean;
+    data?: Design[];
+    message?: string;
+}
+
+export async function fetchDesigns(): Promise<DesignResponse> {
     try {
         const design = await getDocs(collection(db, "designs"));
         const designData: Design[] = [];
@@ -32,16 +38,16 @@ export async function fetchDesigns(): Promise<Design[]> {
                     description: doc.data().requirements.description
                 });
             });
-            return designData;
+            return { success: true, data: designData };
 
         } else {
             console.warn("No such document!");
-            return [];
+            return { success: false, message: "No designs found" };
 
         }
 
     } catch (error) {
         console.error("Error fetching designs: ", error);
-        return [];
+        return { success: false, message: "Error fetching designs" };
     }
 }
