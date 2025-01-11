@@ -11,29 +11,36 @@ interface User {
     timestamp: Timestamp;
 }
 
-export async function fetchUser(userID: string): Promise<User> {
+interface FetchUser {
+    success: boolean;
+    user?: User;
+    message?: string;
+}
+
+export async function fetchUser(userID: string): Promise<FetchUser> {
     try {
         const userDoc = doc(db, "users", userID);
         const docSnap = await getDoc(userDoc);
 
         if (docSnap.exists()) {
             const docData = docSnap.data();
-            return {
+            const userData = {
                 name: docData.name || "",
                 email: docData.email || "",
                 photoURL: docData.photoURL || null,
                 role: docData.role || "",
                 timestamp: docData.timestamp || Timestamp.now(),
             };
+            return { success: true, user: userData };
 
         } else {
             console.warn("No such document!");
-            return { name: "", email: "", photoURL: null, role: "", timestamp: Timestamp.now() };
+            return { success: false, message: "No such document!" };
 
         }
     } catch (error) {
         console.error("Error fetching user data: ", error);
-        return { name: "", email: "", photoURL: null, role: "", timestamp: Timestamp.now() };
+        return { success: false, message: "Error fetching user data!" };
 
     }
 }

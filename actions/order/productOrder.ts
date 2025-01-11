@@ -24,7 +24,7 @@ export async function productOrder(productID: string, uid: string) {
 
     } catch (error) {
         console.error("Error adding product document to Firestore:", error);
-        return { success: false, message: "Error creating product order" };
+        return { success: false, message: "Product was not created successfully" };
 
     }
 }

@@ -34,11 +34,11 @@ export async function createDesign(design: Design) {
             designId: docRef.id,
         });
         console.log("Design document created in Firestore with ID:", docRef.id);
-        return true;
+        return { success: true, message: "Design created successfully" };
 
     } catch (error) {
         console.error("Error adding design document to Firestore:", error);
-        return false;
+        return { success: false, message: "Error creating design" };
 
     }
 }

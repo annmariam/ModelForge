@@ -34,9 +34,12 @@ export async function createOrder(order: Order) {
         await setDoc(userOrderRef, {
             orderId: docRef.id,
         });
-
         console.log("order document created in Firestore with ID:", docRef.id);
+        return { success: true, message: "Order created successfully" };
+
     } catch (error) {
         console.error("Error adding order document to Firestore:", error);
+        return { success: false, message: "Order was not created successfully" };
+
     }
 }

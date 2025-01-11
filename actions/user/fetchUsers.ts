@@ -11,7 +11,13 @@ interface UserCollection {
     role: string;
 }
 
-export async function fetchUsers(): Promise<UserCollection[]> {
+interface FetchUsers {
+    success: boolean;
+    user?: UserCollection[];
+    message?: string;
+}
+
+export async function fetchUsers(): Promise<FetchUsers> {
     try {
         const usersCollection = collection(db, "users");
         const usersSnapshot = await getDocs(usersCollection);
@@ -27,11 +33,11 @@ export async function fetchUsers(): Promise<UserCollection[]> {
             };
         });
 
-        return usersData;
+        return { success: true, user: usersData };
 
     } catch (error) {
         console.error("Error fetching data:", error);
-        return [];
+        return { success: false, message: "Error fetching data" };
 
     }
 }

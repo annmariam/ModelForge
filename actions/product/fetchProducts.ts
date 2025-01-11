@@ -15,7 +15,13 @@ interface ProductCollection {
     "model file": string;
 }
 
-export async function fetchProducts(): Promise<ProductCollection[]> {
+interface ProductData {
+    success: boolean;
+    data?: ProductCollection[];
+    message?: string;
+}
+
+export async function fetchProducts(): Promise<ProductData> {
     try {
         const productsCollection = collection(db, "products");
         const productsSnapshot = await getDocs(productsCollection);
@@ -34,11 +40,11 @@ export async function fetchProducts(): Promise<ProductCollection[]> {
                 "model file": docData["model file"] || "",
             };
         });
-        return productsData;
+        return { success: true, data: productsData };
         
     } catch (error) {
         console.error("Error fetching data:", error);
-        return [];
+        return { success: false, message: "Error fetching data" };
         
     }
 }
