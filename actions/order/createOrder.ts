@@ -13,7 +13,7 @@ interface Order {
     fileUrl: string;
 }
 
-export default async function createOrder(order: Order) {
+export async function createOrder(order: Order) {
     try {
         // Add a new document to the "orders" collection
         const docRef = await addDoc(collection(db, "orders"), {

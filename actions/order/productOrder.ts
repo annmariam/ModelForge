@@ -3,7 +3,7 @@
 import { db } from "@/config/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
-export default async function productOrder(productID: string, uid: string) {
+export async function productOrder(productID: string, uid: string) {
     try {
         const time = serverTimestamp();
         // Add a products to orders collection

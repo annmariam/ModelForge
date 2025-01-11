@@ -11,7 +11,7 @@ interface UserCollection {
     role: string;
 }
 
-export default async function fetchUsers(): Promise<UserCollection[]> {
+export async function fetchUsers(): Promise<UserCollection[]> {
     try {
         const usersCollection = collection(db, "users");
         const usersSnapshot = await getDocs(usersCollection);

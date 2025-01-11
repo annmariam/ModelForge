@@ -14,7 +14,7 @@ interface Design {
     description: string;
 }
 
-export default async function fetchDesigns(): Promise<Design[]> {
+export async function fetchDesigns(): Promise<Design[]> {
     try {
         const design = await getDocs(collection(db, "designs"));
         const designData: Design[] = [];

@@ -14,7 +14,7 @@ interface Order {
     fileUrl: string;
 }
 
-export default async function fetchOrders(): Promise<Order[]> {
+export async function fetchOrders(): Promise<Order[]> {
     try {
         const order = await getDocs(collection(db, "orders"));
         const orderData: Order[] = [];

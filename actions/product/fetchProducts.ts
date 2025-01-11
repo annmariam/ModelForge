@@ -15,7 +15,7 @@ interface ProductCollection {
     "model file": string;
 }
 
-export default async function fetchProducts(): Promise<ProductCollection[]> {
+export async function fetchProducts(): Promise<ProductCollection[]> {
     try {
         const productsCollection = collection(db, "products");
         const productsSnapshot = await getDocs(productsCollection);

@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { PackageOpen, PackagePlus, Users, ShoppingCart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchUserCount, fetchOrderCountUser, fetchModelCountUser, fetchOrderCount, fetchModelCount, fetchProductCount } from '@/actions/fetchFunction';
+import dashboardActions from "@/actions/dashboard";
 
 interface DashboardCardProps {
   title: string;
@@ -16,20 +16,20 @@ interface DashboardCardProps {
 
 const DashboardData = (id: string) => ({
     admin: [
-        { title: "Total Models", fetchFunction: fetchModelCount, icon: PackageOpen },
-        { title: "Total Orders", fetchFunction: fetchOrderCount, icon: ShoppingCart },
-        { title: "Total Products", fetchFunction: fetchProductCount, icon: PackagePlus },
-        { title: "Total Users", fetchFunction: fetchUserCount, icon: Users },
+        { title: "Total Models", fetchFunction: dashboardActions.fetchModelCount, icon: PackageOpen },
+        { title: "Total Orders", fetchFunction: dashboardActions.fetchOrderCount, icon: ShoppingCart },
+        { title: "Total Products", fetchFunction: dashboardActions.fetchProductCount, icon: PackagePlus },
+        { title: "Total Users", fetchFunction: dashboardActions.fetchUserCount, icon: Users },
     ],
     customer: [
-        { title: "My Models", fetchFunction: () => fetchModelCountUser(id), icon: PackageOpen },
-        { title: "My Orders", fetchFunction: () => fetchOrderCountUser(id), icon: ShoppingCart },
+        { title: "My Models", fetchFunction: () => dashboardActions.fetchModelCountUser(id), icon: PackageOpen },
+        { title: "My Orders", fetchFunction: () => dashboardActions.fetchOrderCountUser(id), icon: ShoppingCart },
     ],
     designer: [
-        { title: "Total Users", fetchFunction: () => fetchModelCountUser(id), icon: Users },
+        { title: "Total Users", fetchFunction: () => dashboardActions.fetchModelCountUser(id), icon: Users },
     ],
     printer: [
-        { title: "Total Users", fetchFunction: fetchUserCount, icon: Users },
+        { title: "Total Users", fetchFunction: dashboardActions.fetchUserCount, icon: Users },
     ],
 });
 

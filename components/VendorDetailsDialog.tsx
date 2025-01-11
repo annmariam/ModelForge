@@ -1,21 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import fetchVendor from "@/actions/fetchVender";
+import vendorActions from "@/actions/vendor";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface VendorDetailsDialogProps {
   isOpen: boolean;
@@ -51,7 +40,7 @@ export default function VendorDetailsDialog({ isOpen, onClose, vendorId }: Vendo
       try {
         setLoading(true);
         setError(null);
-        const response = await fetchVendor(vendorId);
+        const response = await vendorActions.fetchVenderData(vendorId);
         if (response?.success) {
           if (response.data) {
             setVendorData(response.data);

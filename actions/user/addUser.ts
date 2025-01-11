@@ -4,7 +4,7 @@ import { db } from "@/config/firebase";
 import { User as UserType } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
-export default async function addUser(user: UserType) {
+export async function addUser(user: UserType) {
     const docRef = doc(db, "users", user.uid);
 
     // Get user document

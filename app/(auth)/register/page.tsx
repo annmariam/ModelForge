@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import userActions from '@/actions/user';  
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { registerUser } from '@/actions/registerUser';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
@@ -44,7 +44,7 @@ export default function RegisterPage() {
         
         // Call the register action
         try {
-            const response = await registerUser(email, password, name, image);
+            const response = await userActions.registerUser(email, password, name, image);
             if (response.success) {
                 setMessage(response.message);
             } else {

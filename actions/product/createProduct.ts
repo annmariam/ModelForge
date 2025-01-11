@@ -3,7 +3,7 @@
 import { db } from "@/config/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
-export default async function createProduct(name: string, price: number, image: string, description: string, category: string, material: string, size: string, link: string) {
+export async function createProduct(name: string, price: number, image: string, description: string, category: string, material: string, size: string, link: string) {
     try {
         // Add a new document to the "products" collection
         const docRef = await addDoc(collection(db, "products"), {

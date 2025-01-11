@@ -1,16 +1,16 @@
 "use client";
 
 import { Loader } from "lucide-react";
+import userActions from "@/actions/user";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import fetchUsers from "@/actions/fetchallUsers";
 import { UserCard } from "@/components/UserCard";
-import { deleteUser } from "@/actions/deleteUser";
+import { deleteUser } from "@/actions/user/deleteUser";
 import { AddUserDialog } from "@/components/AddUserData";
 import { EditUserData } from "@/components/EditUserData";
-import React, { useState, useEffect, useCallback } from "react";
-import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
+import { useState, useEffect, useCallback } from "react";
 import { PrinterDevicesDialog } from "@/components/PrinterDevicesDialog";
+import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
 
 interface UserCollection {
     userID: string;
@@ -71,7 +71,7 @@ export default function Users() {
     // Fetch users from the database
     const fetch = async () => {
         try {
-            const data = await fetchUsers();
+            const data = await userActions.fetchUsers();
             setUserData(data);
             setFilteredData(data);
         } catch (error) {

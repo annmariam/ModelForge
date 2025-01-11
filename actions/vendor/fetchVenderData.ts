@@ -3,12 +3,12 @@
 import { db } from "@/config/firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
-export default async function fetchVender(userID: string) {
+export async function fetchVenderData(userID: string) {
     try {
         const userRef = doc(db, "users", userID);
         const userData = await getDoc(userRef);
         
-        const printerRef = collection(db, "printers");
+        const printerRef = collection(db, "users", userID, "printers");
         const printerData = await getDocs(printerRef);
 
         if (userData.exists() && !printerData.empty) {

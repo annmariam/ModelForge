@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import vendorActions from "@/actions/vendor";
 import { Input } from "@/components/ui/input";
+import printerActions from "@/actions/printer";
 import { Button } from "@/components/ui/button";
-import fetchPrinter from "@/actions/fetchPrinter";
 import { PlusCircle, Edit2, Trash } from "lucide-react";
-import { deleteVenderPrinter } from "@/actions/deleteVenderPrinter";
-import addOrUpdateVenderPrinter from "@/actions/addOrUpdateVenderPrinter";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
@@ -33,7 +32,7 @@ export function PrinterDevicesDialog({ open, onOpenChange, userID }: PrinterDevi
             const { id, name, status } = editingDevice;
 
             try {
-                const response = await addOrUpdateVenderPrinter(userID, name, status, id);
+                const response = await vendorActions.addOrUpdateVenderPrinter(userID, name, status, id);
 
                 if (response.success) {
                     setMessage(response.message);
@@ -58,7 +57,7 @@ export function PrinterDevicesDialog({ open, onOpenChange, userID }: PrinterDevi
 
     const handleRemove = async(device: PrinterDevice) => {
         if (device.id) {
-            const response = await deleteVenderPrinter(userID, device.id)
+            const response = await vendorActions.deleteVenderPrinter(userID, device.id)
             if (response.success) {
                 setMessage(response.message);
             } else {
@@ -70,7 +69,7 @@ export function PrinterDevicesDialog({ open, onOpenChange, userID }: PrinterDevi
     useEffect(() => {
         const fetchPrinterDevices = async () => {
             try {
-                const response = await fetchPrinter(userID);
+                const response = await printerActions.fetchPrinter(userID);
                 if (response.success) {
                     if (response.data) {
                         setLocalPrinterDevices(response.data);

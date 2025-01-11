@@ -3,7 +3,7 @@
 import { db } from "@/config/firebase";
 import { collection, doc, deleteDoc, getDocs } from "firebase/firestore";
 
-export async function deleteUser(designID: string) {
+export async function deleteDesign(designID: string) {
     try {
         const data = await getDocs(collection(db, 'designs', designID));
         const customerID = data.docs[0].data().customerId;

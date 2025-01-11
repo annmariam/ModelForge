@@ -3,7 +3,7 @@
 import { db } from "@/config/firebase";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
-export default async function addOrUpdateVenderPrinter( venderId: string, name: string, status: string, printerId?: string) {
+export async function addOrUpdateVenderPrinter( venderId: string, name: string, status: string, printerId?: string) {
     try {
         if (printerId) {
             const docRef = doc(db, "users", venderId, "printers", printerId)

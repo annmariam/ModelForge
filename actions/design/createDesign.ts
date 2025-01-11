@@ -12,7 +12,7 @@ interface Design {
     description: string;
 }
 
-export default async function createDesign(design: Design) {
+export async function createDesign(design: Design) {
     try {
         // Add a new document to the "designs" collection
         const docRef = await addDoc(collection(db, "designs"), {

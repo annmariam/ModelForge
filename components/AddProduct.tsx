@@ -4,10 +4,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import productActions from "@/actions/product";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import createProduct from "@/actions/createProduct";
-import updateProduct from "@/actions/updateProduct";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -59,7 +58,7 @@ export function AddProducts({ open, onOpenChange, product }: AddUserDialogProps)
             return;
         }
 
-        const response = product ? await updateProduct(product.productID, name, price, image, description, category, material, size, link) : await createProduct(name, price, image, description, category, material, size, link);
+        const response = product ? await productActions.updateProduct(product.productID, name, price, image, description, category, material, size, link) : await productActions.createProduct(name, price, image, description, category, material, size, link);
         if (response.success) {
             setMessage(response.message);
         } else {

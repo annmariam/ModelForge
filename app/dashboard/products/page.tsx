@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { AddProducts } from "@/components/AddProduct";
 import { Separator } from "@/components/ui/separator";
 import { useCallback, useEffect, useState } from "react";
-import fetchallProducts from "@/actions/fetchallProducts";
+import productActions from '@/actions/product';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -47,7 +47,7 @@ export default function Products() {
 
     // Fetch products from database
     const fetchProducts = async(): Promise<Product[]> => {
-        const data = await fetchallProducts()
+        const data = await productActions.fetchProducts()
         return data;
     }
 

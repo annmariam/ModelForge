@@ -9,7 +9,7 @@ interface PrinterDevice {
     status: "active" | "inactive";
 }
 
-export default async function fetchPrinter( userID: string ) {
+export async function fetchPrinter( userID: string ) {
     try {
         const printerRef = collection(db, "users", userID, "printers")
         const printerData = await getDocs(printerRef);

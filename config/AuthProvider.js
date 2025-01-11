@@ -1,6 +1,6 @@
 'use client';
 
-import addUser from "@/actions/addUser";
+import userActions from "@/actions/user";
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/config/firebase';
 import { getDoc, doc } from 'firebase/firestore';
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
             const user = result.user;
 
             if (user) {
-                await addUser(user);
+                await userActions.addUser(user);
                 fetchUserData(user);
                 router.push('/dashboard'); // Navigate to the desired page
             } else {
