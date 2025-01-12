@@ -10,7 +10,6 @@ import { AddUserDialog } from "@/components/AddUserData";
 import { EditUserData } from "@/components/EditUserData";
 import { useState, useEffect, useCallback } from "react";
 import { PrinterDevicesDialog } from "@/components/PrinterDevicesDialog";
-import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
 
 interface UserCollection {
     userID: string;
@@ -21,7 +20,6 @@ interface UserCollection {
 }
 
 export default function Users() {
-    const [filter, setFilter] = useState<string>("all");
     const [loading, setLoading] = useState<boolean>(true);
     const [adduser, setAdduser] = useState<boolean>(false);
     const [edituser, setEdituser] = useState<boolean>(false);
@@ -30,35 +28,28 @@ export default function Users() {
     const [message, setMessage] = useState<string | null>(null);
     const [addPrinter, setAddPrinter] = useState<boolean>(false);
     const [userData, setUserData] = useState<UserCollection[]>([]);
-    const [filteredData, setFilteredData] = useState<UserCollection[]>([]);
     const [editingUser, setEditingUser] = useState<UserCollection | null>(null);
     const [id, setID] = useState<string>("");
-    const [sortOrder, setSortOrder] = useState<string>("asc");
-
-    // Sort data by role
-    const sortUsers = useCallback(
-        (users: UserCollection[]) => {
-            return [...users].sort((a, b) => {
-                if (sortOrder === "asc") {
-                    return a.role.localeCompare(b.role);
-                } else {
-                    return b.role.localeCompare(a.role);
-                }
-            });
-        },
-        [sortOrder]
-    );
 
     // Edit Data
     const handleEdit = (user: UserCollection) => {
-        console.log("Edit user with ID:", user.userID);
         setEdituser(true);
         setEditingUser(user);
     };
 
     // Update Data
-    const handleUpdate = (user: UserCollection) => {
-        console.log("Update user with ID:", user.userID);
+    const handleUpdate = async (user: UserCollection) => {
+        const response = await userActions.updateUser(user);
+        if (response.success) {
+            setMessage(response.message);
+        } else {
+            setError(response.message);
+        }
+        fetchUsers();
+        setTimeout(() => {
+            setError("");
+            setMessage("");
+        }, 5000);
     };
 
     // Handle Add Printer Details
@@ -69,14 +60,13 @@ export default function Users() {
 
     // Delete Data
     const handleDelete = async (userID: string) => {
-        console.log("Delete user with ID:", userID);
         const response = await deleteUser(userID);
         if (response.success) {
             setMessage(response.message);
         } else {
             setError(response.message);
         }
-        fetch();
+        fetchUsers();
         setTimeout(() => {
             setError("");
             setMessage("");
@@ -84,70 +74,47 @@ export default function Users() {
     };
 
     // Fetch users from the database
-    const fetch = async () => {
+    const fetchUsers = async () => {
         try {
             const data = await userActions.fetchUsers();
             if (data.success) {
                 if (data.user) {
                     setUserData(data.user);
-                    setFilteredData(data.user);
                 }
             } else {
-                if (data.message) {
-                    setError(data.message);
-                }
+                setError(data.message || "Error fetching users");
             }
         } catch (error) {
-            console.error(error);
+            console.log(error);
             setError("Error fetching data");
         } finally {
             setLoading(false);
         }
     };
 
-    // Filter users based on role or search query
-    const applyFilters = useCallback(() => {
-        let filtered = userData;
+    // Filter users by roles
+    const groupUsersByRole = useCallback(() => {
+        const grouped: Record<string, UserCollection[]> = {
+            admin: [],
+            customer: [],
+            designer: [],
+            printer: [],
+        };
 
-        if (filter !== "all") {
-            filtered = filtered.filter((user) => user.role === filter);
-        }
+        const lowerCaseQuery = searchQuery.toLowerCase();
 
-        if (searchQuery) {
-            filtered = filtered.filter((user) =>
-                user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                user.email.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
+        userData.forEach((user) => {
+            if (grouped[user.role] && (user.name.toLowerCase().includes(lowerCaseQuery) || user.email.toLowerCase().includes(lowerCaseQuery))) {
+                grouped[user.role].push(user);
+            }
+        });
 
-        setFilteredData(sortUsers(filtered));
-    }, [userData, filter, searchQuery, sortUsers]);
-
-    // Handle filter change
-    const handleFilterChange = (newFilter: string) => {
-        setFilter(newFilter);
-        applyFilters();
-    };
-
-    // Handle search query change
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
-        applyFilters();
-    };
-
-    // Handle sort order change
-    const handleSortOrderChange = (newSortOrder: string) => {
-        setSortOrder(newSortOrder);
-        applyFilters();
-    };
+        return grouped;
+    }, [userData, searchQuery]);
 
     useEffect(() => {
-        fetch();
+        fetchUsers();
     }, []);
-
-    useEffect(() => {
-        applyFilters();
-    }, [applyFilters]);
 
     if (loading) {
         return (
@@ -157,48 +124,34 @@ export default function Users() {
         );
     }
 
+    const groupedUsers = groupUsersByRole();
+
     return (
         <div>
-            {error && <div className="alert alert-error">{error}</div>}
-            {message && <div className="alert alert-success">{message}</div>}
+            {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
+            {message && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{message}</div>}
 
-            {/* Filter and Search Options */}
+            {/* Search and Add User Button */}
             <div className="flex gap-4 mb-4">
-                <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={handleSearchChange} className="w-full" />
-                <Select onValueChange={handleFilterChange} value={filter}>
-                    <SelectTrigger className="w-1/3">
-                        <SelectValue placeholder="Filter by role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="customer">Customer</SelectItem>
-                        <SelectItem value="designer">Designer</SelectItem>
-                        <SelectItem value="printer">Printer</SelectItem>
-                    </SelectContent>
-                </Select>
-                <Select onValueChange={handleSortOrderChange} value={sortOrder}>
-                    <SelectTrigger className="w-1/3">
-                        <SelectValue placeholder="Sort by role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="asc">Ascending</SelectItem>
-                        <SelectItem value="desc">Descending</SelectItem>
-                    </SelectContent>
-                </Select>
-                <Button variant={"default"} onClick={() => setAdduser(true)}>Add User</Button>
+                <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full" />
+                <Button variant="default" onClick={() => setAdduser(true)}>Add User</Button>
             </div>
 
-            {/* UserCard View */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredData.length === 0 ? (
-                    <div className="alert alert-info">No users found</div>
-                ) : ( 
-                    filteredData.map((user) => ( 
-                        <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} /> 
-                    ))
-                )}
-            </div>
+            {/* User Sections */}
+            {Object.keys(groupedUsers).map((role) => (
+                <div key={role} className="mb-6">
+                    <h2 className="text-xl font-semibold capitalize mb-4">{role}s</h2>
+                    <div className="flex flex-wrap gap-6">
+                        {groupedUsers[role].length === 0 ? (
+                            <p>No {role}s found</p>
+                        ) : (
+                            groupedUsers[role].map((user) => (
+                                <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} />
+                            ))
+                        )}
+                    </div>
+                </div>
+            ))}
 
             {addPrinter && id && (
                 <PrinterDevicesDialog open={addPrinter} onOpenChange={(open) => !open && setAddPrinter(false)} userID={id} />

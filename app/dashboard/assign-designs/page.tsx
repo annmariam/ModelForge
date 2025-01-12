@@ -23,14 +23,14 @@ interface Design {
 }
 
 export default function AssignDesign() {
-    const [filter, setFilter] = useState<string>("all")
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
-    const [searchQuery, setSearchQuery] = useState<string>("")
-    const [designData, setDesignData] = useState<Design[]>([])
-    const [filteredData, setFilteredData] = useState<Design[]>([])
-    const [selectedDesign, setSelectedDesign] = useState<Design | null>(null)
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+    const [filter, setFilter] = useState<string>("all");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [designData, setDesignData] = useState<Design[]>([]);
+    const [filteredData, setFilteredData] = useState<Design[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [selectedDesign, setSelectedDesign] = useState<Design | null>(null);
 
     // Update Data
     const handleUpdate = (design: Design) => {
