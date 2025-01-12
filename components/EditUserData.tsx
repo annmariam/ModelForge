@@ -9,18 +9,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 interface UserCollection {
-  userID: string
-  name: string
-  email: string
-  photoURL: string
-  role: string
+    userID: string
+    name: string
+    email: string
+    photoURL: string
+    role: string
 }
 
 interface EditUserDialogProps {
-  user: UserCollection
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave: (updatedUser: UserCollection) => void
+    user: UserCollection
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    onSave: (updatedUser: UserCollection) => void
 }
 
 export function EditUserData({ user, open, onOpenChange, onSave }: EditUserDialogProps) {

@@ -39,8 +39,14 @@ export function AddProducts({ open, onOpenChange, product }: AddUserDialogProps)
     const [message, setMessage] = useState<string | null>(null);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.files);
-        setImage("https://github.com/shadcn.png");
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {

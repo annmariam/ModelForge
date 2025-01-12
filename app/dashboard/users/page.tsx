@@ -28,11 +28,26 @@ export default function Users() {
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [message, setMessage] = useState<string | null>(null);
-    const [addPrinter, setAddPrinter] = useState<boolean>(false); 
+    const [addPrinter, setAddPrinter] = useState<boolean>(false);
     const [userData, setUserData] = useState<UserCollection[]>([]);
     const [filteredData, setFilteredData] = useState<UserCollection[]>([]);
     const [editingUser, setEditingUser] = useState<UserCollection | null>(null);
     const [id, setID] = useState<string>("");
+    const [sortOrder, setSortOrder] = useState<string>("asc");
+
+    // Sort data by role
+    const sortUsers = useCallback(
+        (users: UserCollection[]) => {
+            return [...users].sort((a, b) => {
+                if (sortOrder === "asc") {
+                    return a.role.localeCompare(b.role);
+                } else {
+                    return b.role.localeCompare(a.role);
+                }
+            });
+        },
+        [sortOrder]
+    );
 
     // Edit Data
     const handleEdit = (user: UserCollection) => {
@@ -50,15 +65,15 @@ export default function Users() {
     const handlePrinter = (userID: string) => {
         setAddPrinter(true);
         setID(userID);
-    }
+    };
 
     // Delete Data
-    const handleDelete = async(userID: string) => {
+    const handleDelete = async (userID: string) => {
         console.log("Delete user with ID:", userID);
         const response = await deleteUser(userID);
         if (response.success) {
             setMessage(response.message);
-        } else {    
+        } else {
             setError(response.message);
         }
         fetch();
@@ -105,8 +120,8 @@ export default function Users() {
             );
         }
 
-        setFilteredData(filtered);
-    }, [userData, filter, searchQuery]);
+        setFilteredData(sortUsers(filtered));
+    }, [userData, filter, searchQuery, sortUsers]);
 
     // Handle filter change
     const handleFilterChange = (newFilter: string) => {
@@ -120,10 +135,19 @@ export default function Users() {
         applyFilters();
     };
 
+    // Handle sort order change
+    const handleSortOrderChange = (newSortOrder: string) => {
+        setSortOrder(newSortOrder);
+        applyFilters();
+    };
+
     useEffect(() => {
         fetch();
+    }, []);
+
+    useEffect(() => {
         applyFilters();
-    }, [applyFilters, filter, searchQuery]);
+    }, [applyFilters]);
 
     if (loading) {
         return (
@@ -137,7 +161,7 @@ export default function Users() {
         <div>
             {error && <div className="alert alert-error">{error}</div>}
             {message && <div className="alert alert-success">{message}</div>}
-            
+
             {/* Filter and Search Options */}
             <div className="flex gap-4 mb-4">
                 <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={handleSearchChange} className="w-full" />
@@ -153,6 +177,15 @@ export default function Users() {
                         <SelectItem value="printer">Printer</SelectItem>
                     </SelectContent>
                 </Select>
+                <Select onValueChange={handleSortOrderChange} value={sortOrder}>
+                    <SelectTrigger className="w-1/3">
+                        <SelectValue placeholder="Sort by role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="asc">Ascending</SelectItem>
+                        <SelectItem value="desc">Descending</SelectItem>
+                    </SelectContent>
+                </Select>
                 <Button variant={"default"} onClick={() => setAdduser(true)}>Add User</Button>
             </div>
 
@@ -160,8 +193,10 @@ export default function Users() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredData.length === 0 ? (
                     <div className="alert alert-info">No users found</div>
-                ) : (
-                    filteredData.map((user) => ( <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} /> ))
+                ) : ( 
+                    filteredData.map((user) => ( 
+                        <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} /> 
+                    ))
                 )}
             </div>
 

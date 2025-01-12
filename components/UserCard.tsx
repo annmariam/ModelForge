@@ -57,23 +57,25 @@ export function UserCard({ user, onEdit, onDelete, addPrinter }: UserCardProps) 
                         {roleBadge(user.role)}
                     </div>
                 </CardContent>
-                <CardFooter className="flex justify-end gap-2">
+                <CardFooter className="flex flex-wrap justify-end gap-2">
                     {user.role === "printer" && (
-                        <>
+                        <div className='flex items-center gap-2'>
                             <Button onClick={() => addPrinter(user.userID)} variant="outline" size="sm">
                                 <CirclePlus size={16} className="mr-2" /> Add Printer
                             </Button>
                             <Button onClick={() => setView(true)} variant="outline" size="sm">
                                 <Eye size={16} className="mr-2" /> View Vendor
                             </Button>
-                        </>
+                        </div>
                     )}
-                    <Button onClick={() => onEdit(user)} variant="outline" size="sm">
-                        <Pencil size={16} className="mr-2" /> Edit
-                    </Button>
-                    <Button onClick={() => onDelete(user.userID)} variant="outline" size="sm">
-                        <Trash2 size={16} className="mr-2" /> Delete
-                    </Button>
+                    <div className='flex items-center gap-2'>
+                        <Button onClick={() => onEdit(user)} variant="outline" size="sm">
+                            <Pencil size={16} className="mr-2" /> Edit
+                        </Button>
+                        <Button onClick={() => onDelete(user.userID)} variant="outline" size="sm">
+                            <Trash2 size={16} className="mr-2" /> Delete
+                        </Button>
+                    </div>
                 </CardFooter>
             </Card>
             {view && (<VendorDetailsDialog isOpen={view} onClose={() => setView(false)} vendorId={user.userID} />)}
