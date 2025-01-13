@@ -19,7 +19,6 @@ const DashboardData = (id: string) => ({
         { title: "Total Design", fetchFunction: dashboardActions.fetchModelCount, icon: PackageOpen },
         { title: "Total Orders", fetchFunction: dashboardActions.fetchOrderCount, icon: ShoppingCart },
         { title: "Total Products", fetchFunction: dashboardActions.fetchProductCount, icon: PackagePlus },
-        { title: "Total Print", fetchFunction: dashboardActions.fetchAssignedPrint, icon: ShoppingCart },
         { title: "Total Users", fetchFunction: dashboardActions.fetchUserCount, icon: Users },
     ],
     customer: [

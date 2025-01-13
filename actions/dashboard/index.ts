@@ -13,16 +13,27 @@ import { fetchOrderCountUser } from "./fetchOrderCountUser";
 import { fetchUserCount } from "./fetchUserCount";
 
 // Print Collection
-import { fetchAssignedPrint } from "./fetchAssignedPrint";
 import { fetchWorkingPrintUser } from "./fetchWorkingPrintUser";
 import { fetchAssignedPrintUser } from "./fetchAssignedPrintUser";
 import { fetchCompletedPrintUser } from "./fetchCompletedPrintUser";
 
 // Design Collection
-import { fetchAssignedDesign } from "./fetchAssignedDesign";
 import { fetchWorkingDesignUser } from "./fetchWorkingDesignUser";
 import { fetchAssignedDesignUser } from "./fetchAssignedDesignUser";
 import { fetchCompletedDesignUser } from "./fetchCompletedDesignUser";
 
-const dashboardActions = { fetchModelCount, fetchModelCountUser, fetchOrderCount, fetchOrderCountUser, fetchProductCount, fetchUserCount, fetchAssignedPrint, fetchAssignedPrintUser, fetchAssignedDesign, fetchWorkingPrintUser, fetchWorkingDesignUser, fetchCompletedDesignUser, fetchCompletedPrintUser, fetchAssignedDesignUser };
+const dashboardActions = {
+    fetchAssignedDesignUser,
+    fetchAssignedPrintUser,
+    fetchCompletedDesignUser,
+    fetchCompletedPrintUser,
+    fetchModelCount,
+    fetchModelCountUser,
+    fetchOrderCount,
+    fetchOrderCountUser,
+    fetchProductCount,
+    fetchUserCount,
+    fetchWorkingDesignUser,
+    fetchWorkingPrintUser
+};
 export default dashboardActions;
