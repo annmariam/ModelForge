@@ -85,8 +85,8 @@ export function Navbar() {
                             <Image src={Logo} alt="ModelForge" width={50} height={50} priority />
                             <span className="text-2xl font-bold text-primary pl-2"> ModelForge </span>
                         </Link>
-                        <div className="hidden md:block">
-                            {nav_left.map((item) => (
+                        <div className="hidden md:block gap-3">
+                            {(!data?.role || data.role === "admin" || data.role === "customer") && nav_left.map((item) => (
                                 <Link key={item.name} href={item.href} className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300"> {item.name} </Link>
                             ))}
                         </div>
@@ -184,9 +184,9 @@ export function Navbar() {
                         </div>
                     </div>
                     {/* Mobile Section */}
-                    <div className="md:hidden flex items-center justify-center">
+                    <div className="md:hidden flex items-center justify-center gap-3">
                         <ModeToggle />
-                        {user && (
+                        {user ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -222,6 +222,25 @@ export function Navbar() {
                                         <LogOut className="mr-2 h-4 w-4" />
                                         <span>Log out</span>
                                     </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="default" className="rounded-md px-3 py-2 text-sm font-medium dark:text-black hover:text-white hover:dark:text-black text-gray-300"> Menu </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56 bg-background p-2">
+                                    {nav_left.map((item) => (
+                                        <DropdownMenuItem key={item.name} onClick={() => router.push(item.href)} className="hover:bg-gray-200 hover:text-black">
+                                            <span>{item.name}</span>
+                                        </DropdownMenuItem>
+                                    ))}
+                                    <DropdownMenuSeparator />
+                                    {nav_right.map((item) => (
+                                        <DropdownMenuItem key={item.name} onClick={() => router.push(item.href)} className="hover:bg-gray-200 hover:text-black">
+                                            <span>{item.name}</span>
+                                        </DropdownMenuItem>
+                                    ))}
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         )}
