@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/config/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundIcon as UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundIcon as UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2, FileText, Clock, Printer, PrinterCheck, FileCheck2Icon, FileClock } from 'lucide-react';
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
@@ -47,12 +47,15 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         ],
         designer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "Designs", href: "/dashboard/designs", icon: PackageOpen },
+            { name: "Assigned Designs", href: "/dashboard/designer/assigned", icon: FileText },
+            { name: "Work On Progress Designs", href: "/dashboard/designer/working", icon: FileClock },
+            { name: "Completed Designs", href: "/dashboard/designer/finished", icon: FileCheck2Icon },
         ],
         printer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
-            { name: "Order", href: "/dashboard/printer", icon: PackageOpen },
+            { name: "Assigned Print", href: "/dashboard/printer/assigned", icon: Printer },
+            { name: "Work On Progress Print", href: "/dashboard/printer/working", icon: Clock },
+            { name: "Completed Print", href: "/dashboard/printer/finished", icon: PrinterCheck },
         ],
     };
 

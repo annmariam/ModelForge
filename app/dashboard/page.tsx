@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from '@/config/AuthProvider';
+import dashboardActions from "@/actions/dashboard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { PackageOpen, PackagePlus, Users, ShoppingCart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import dashboardActions from "@/actions/dashboard";
+import { PackageOpen, PackagePlus, Users, ShoppingCart, FileText, Printer, Clock, PrinterCheck } from 'lucide-react';
 
 interface DashboardCardProps {
-  title: string;
-  fetchFunction: () => Promise<number>;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    title: string;
+    fetchFunction: () => Promise<number>;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 const DashboardData = (id: string) => ({
@@ -19,6 +19,7 @@ const DashboardData = (id: string) => ({
         { title: "Total Design", fetchFunction: dashboardActions.fetchModelCount, icon: PackageOpen },
         { title: "Total Orders", fetchFunction: dashboardActions.fetchOrderCount, icon: ShoppingCart },
         { title: "Total Products", fetchFunction: dashboardActions.fetchProductCount, icon: PackagePlus },
+        { title: "Total Print", fetchFunction: dashboardActions.fetchAssignedPrint, icon: ShoppingCart },
         { title: "Total Users", fetchFunction: dashboardActions.fetchUserCount, icon: Users },
     ],
     customer: [
@@ -26,10 +27,14 @@ const DashboardData = (id: string) => ({
         { title: "My Orders", fetchFunction: () => dashboardActions.fetchOrderCountUser(id), icon: ShoppingCart },
     ],
     designer: [
-        { title: "Total Users", fetchFunction: () => dashboardActions.fetchModelCountUser(id), icon: Users },
+        { title: "Assigned Designs", fetchFunction: () => dashboardActions.fetchOrderCountUser(id), icon: FileText },
+        { title: "Working Designs", fetchFunction: () => dashboardActions.fetchWorkingDesignUser(id), icon: Clock },
+        { title: "Completed Designs", fetchFunction: () => dashboardActions.fetchCompletedDesignUser(id), icon: FileText },
     ],
     printer: [
-        { title: "Total Users", fetchFunction: dashboardActions.fetchUserCount, icon: Users },
+        { title: "Assigned Print", fetchFunction: () => dashboardActions.fetchAssignedPrintUser(id), icon: Printer },
+        { title: "Working Print", fetchFunction: () => dashboardActions.fetchWorkingPrintUser(id), icon: Clock },
+        { title: "Completed Print", fetchFunction: () => dashboardActions.fetchCompletedPrintUser(id), icon: PrinterCheck },
     ],
 });
 
