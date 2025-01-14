@@ -7,6 +7,7 @@ interface PrinterDevice {
     id: string;
     name: string;
     status: "active" | "inactive";
+    workID: string;
 }
 
 export async function fetchPrinter( userID: string ) {
@@ -17,7 +18,8 @@ export async function fetchPrinter( userID: string ) {
         const data: PrinterDevice[] = printerData.docs.map((doc) => ({
             id: doc.id,
             name: doc.data().name,
-            status: doc.data().status
+            status: doc.data().status,
+            workID: doc.data().workID || "N/A",
         }));
 
         console.log("Fetched Vender Data")

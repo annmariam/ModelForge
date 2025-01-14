@@ -52,9 +52,7 @@ export function UserCard({ user, onEdit, onDelete, addPrinter }: UserCardProps) 
                         <h3 className="text-xl font-bold text-primary">{user.name}</h3>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                     </div>
-                    <div className="self-start mt-2">
-                        {roleBadge(user.role)}
-                    </div>
+                    <div className="self-start mt-2">{roleBadge(user.role)}</div>
                 </CardHeader>
                 <CardContent className="pt-2 pb-4">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">

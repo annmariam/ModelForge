@@ -128,30 +128,36 @@ export default function Users() {
 
     return (
         <div>
-            {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
-            {message && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{message}</div>}
+            <div>
+                {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
+                {message && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{message}</div>}
 
-            {/* Search and Add User Button */}
-            <div className="flex gap-4 mb-4">
-                <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full" />
-                <Button variant="default" onClick={() => setAdduser(true)}>Add User</Button>
+                {/* Search and Add User Button */}
+                <div className="flex gap-4 mb-4">
+                    <Input type="text" placeholder="Search by name or email" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full" />
+                    <Button variant="default" onClick={() => setAdduser(true)}>Add User</Button>
+                </div>
             </div>
 
             {/* User Sections */}
-            {Object.keys(groupedUsers).map((role) => (
-                <div key={role} className="mb-6">
-                    <h2 className="text-xl font-semibold capitalize mb-4">{role}s</h2>
-                    <div className="flex flex-wrap gap-6">
-                        {groupedUsers[role].length === 0 ? (
-                            <p>No {role}s found</p>
-                        ) : (
-                            groupedUsers[role].map((user) => (
-                                <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} />
-                            ))
+            <div className="overflow-y-auto h-[calc(100vh-240px)]">
+                {Object.keys(groupedUsers).map((role) => (
+                    <div key={role} className="mb-6">
+                        {(groupedUsers[role].length !== 0) && (
+                            <h2 className="text-xl font-semibold capitalize mb-4">{role}s</h2>
                         )}
+                        <div className="flex flex-wrap gap-6">
+                            {(groupedUsers[role].length === 0 && !searchQuery) ? (
+                                <p>No {role}s found</p>
+                            ) : (
+                                groupedUsers[role].map((user) => (
+                                    <UserCard key={user.userID} user={user} onEdit={handleEdit} onDelete={handleDelete} addPrinter={() => handlePrinter(user.userID)} />
+                                ))
+                            )}
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
 
             {addPrinter && id && (
                 <PrinterDevicesDialog open={addPrinter} onOpenChange={(open) => !open && setAddPrinter(false)} userID={id} />

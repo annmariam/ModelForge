@@ -13,6 +13,7 @@ interface PrinterDevice {
     id: string;
     name: string;
     status: "active" | "inactive";
+    workID: string;
 }
 
 interface PrinterDevicesDialogProps {
@@ -104,6 +105,7 @@ export function PrinterDevicesDialog({ open, onOpenChange, userID }: PrinterDevi
                             <div className="flex-grow">
                                 <p className="font-medium">{device.name}</p>
                                 <p className="text-sm text-gray-500">Status: {device.status}</p>
+                                <p className="text-sm text-gray-500">Work ID: {device.workID}</p>
                             </div>
                             <Button variant="ghost" size="icon" onClick={() => handleEdit(device)} aria-label="Edit printer device">
                                 <Edit2 className="h-4 w-4" />
@@ -114,7 +116,7 @@ export function PrinterDevicesDialog({ open, onOpenChange, userID }: PrinterDevi
                         </div>
                     ))}
                     {!editingDevice && (
-                        <Button type="button" variant="outline" onClick={() => setEditingDevice({ id: "", name: "", status: "inactive" })} className="w-full">
+                        <Button type="button" variant="outline" onClick={() => setEditingDevice({ id: "", name: "", status: "inactive", workID: "" })} className="w-full">
                             <PlusCircle className="mr-2 h-4 w-4" /> Add Printer Device
                         </Button>
                     )}

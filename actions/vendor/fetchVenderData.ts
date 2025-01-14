@@ -24,6 +24,7 @@ export async function fetchVenderData(userID: string) {
                     id: printer.id,
                     name: printer.data().name,
                     status: printer.data().status,
+                    workID: printer.data().workID || "N/A",
                 }))
             }
             return { success: true, data: result };
