@@ -49,13 +49,13 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
             { name: "Assigned Designs", href: "/dashboard/designer/assigned", icon: FileText },
             { name: "Work On Progress Designs", href: "/dashboard/designer/working", icon: FileClock },
-            { name: "Completed Designs", href: "/dashboard/designer/finished", icon: FileCheck2Icon },
+            { name: "Completed Designs", href: "/dashboard/designer/completed", icon: FileCheck2Icon },
         ],
         printer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
             { name: "Assigned Print", href: "/dashboard/printer/assigned", icon: Printer },
             { name: "Work On Progress Print", href: "/dashboard/printer/working", icon: Clock },
-            { name: "Completed Print", href: "/dashboard/printer/finished", icon: PrinterCheck },
+            { name: "Completed Print", href: "/dashboard/printer/completed", icon: PrinterCheck },
         ],
     };
 
