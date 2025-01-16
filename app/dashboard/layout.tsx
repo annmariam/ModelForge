@@ -33,17 +33,17 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
     const navItems = {
         admin: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "Designs", href: "/dashboard/assign-designs", icon: Package2 },
-            { name: "Orders", href: "/dashboard/assign-orders", icon: ShoppingBasket },
-            { name: "Products", href: "/dashboard/products", icon: PackagePlus },
-            { name: "Users", href: "/dashboard/users", icon: Users },
+            { name: "Designs", href: "/dashboard/admin/assign-designs", icon: Package2 },
+            { name: "Orders", href: "/dashboard/admin/assign-orders", icon: ShoppingBasket },
+            { name: "Products", href: "/dashboard/admin/products", icon: PackagePlus },
+            { name: "Users", href: "/dashboard/admin/users", icon: Users },
             { name: "Settings", href: "/dashboard/settings", icon: Settings },
         ],
         customer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-            { name: "Models", href: "/dashboard/models", icon: PackageOpen },
-            { name: "My Orders", href: "/dashboard/orders", icon: ShoppingCart },
-            { name: "Settings", href: "/dashboard/settings", icon: Settings },
+            { name: "Models", href: "/dashboard/customer/models", icon: PackageOpen },
+            { name: "My Orders", href: "/dashboard/customer/orders", icon: ShoppingCart },
+            { name: "Settings", href: "/dashboard/customer/settings", icon: Settings },
         ],
         designer: [
             { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -149,7 +149,10 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
                     <div className="mx-auto py-6 sm:px-6 lg:px-8">
                         <div className='w-full flex justify-between items-center pb-5'>                        
                             <span className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{navItems[role].find(link => link.href === pathName)?.name}</span>
-                            <Button variant={"destructive"} onClick={logOut}>Logout</Button>
+                            <button onClick={logOut} className="px-4 py-2 gap-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center">
+                                <LogOut size={24} />
+                                <span>LogOut</span>
+                            </button>
                         </div>
                         <div>{children}</div>
                     </div>

@@ -145,7 +145,7 @@ export default function AssignOrders() {
             </div>
 
             {/* Order Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-y-auto max-h-[calc(100vh-250px)]">
                 {filteredData.map((order) => (
                     <Card key={order.orderID} className="overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg cursor-pointer"onClick={() => handleViewDetails(order)}>
                         <CardHeader className="pb-2">

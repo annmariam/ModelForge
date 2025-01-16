@@ -141,7 +141,9 @@ export default function AssignDesign() {
             </div>
 
             {/* Design Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="overflow-y-auto h-[calc(100vh-240px)]">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-y-auto max-h-[calc(100vh-250px)]">
                 {filteredData.map((design) => (
                     <Card key={design.designID} className="overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg cursor-pointer" onClick={() => handleViewDetails(design)}>
                         <CardHeader className="pb-2">
@@ -170,6 +172,7 @@ export default function AssignDesign() {
                         </CardFooter>
                     </Card>
                 ))}
+            </div>
             </div>
 
             {/* Design Details Modal */}
