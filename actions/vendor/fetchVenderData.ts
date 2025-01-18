@@ -11,6 +11,9 @@ export async function fetchVenderData(userID: string) {
         const printerRef = collection(db, "users", userID, "printers");
         const printerData = await getDocs(printerRef);
 
+        const materialRef = collection(db, "users", userID, "materials");
+        const materialData = await getDocs(materialRef);
+
         if (userData.exists() && !printerData.empty) {
             const result = {
                 name: userData.data().name,
@@ -19,6 +22,14 @@ export async function fetchVenderData(userID: string) {
                 role: userData.data().role,
                 phone: userData.data().phone || "N/A",
                 address: userData.data().address || "N/A",
+
+                materialDetails: materialData.docs.map((material) => ({
+                    id: material.id,
+                    name: material.data().name,
+                    color: material.data().color,
+                    quantity: material.data().quantity,
+                    status: material.data().status,
+                })),
 
                 printerDetails: printerData.docs.map((printer) => ({
                     id: printer.id,
