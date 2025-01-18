@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/config/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundIcon as UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2, FileText, Clock, Printer, PrinterCheck, FileCheck2Icon, FileClock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutDashboard, Loader, LogOut, PackageOpen, PackagePlus, Users, UserRoundIcon as UserRoundPen, ShoppingBasket, ShoppingCart, Settings, Package2, FileText, Clock, Printer, PrinterCheck, FileCheck2Icon, FileClock, Anvil } from 'lucide-react';
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
@@ -56,6 +56,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
             { name: "Assigned Print", href: "/dashboard/printer/assigned", icon: Printer },
             { name: "Work On Progress Print", href: "/dashboard/printer/working", icon: Clock },
             { name: "Completed Print", href: "/dashboard/printer/completed", icon: PrinterCheck },
+            { name: "Materials", href: "/dashboard/printer/materials", icon: Anvil },
         ],
     };
 
